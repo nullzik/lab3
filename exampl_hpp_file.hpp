@@ -5,7 +5,7 @@ public:
 	using HorsesType = std::vector<Horse>;
 	
 	enum class Type
-	{
+	{C:\Users\boyko\Desktop\Учёба\Програмирование\lab3\exampl_hpp_file.hpp
 		eOpen = 0,
 		eClose = 1,
 	};
