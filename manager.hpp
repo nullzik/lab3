@@ -4,6 +4,7 @@
 #include "employee.hpp"
 #include "menuItem.hpp"
 #include "inventory.hpp"
+#include "order.hpp"
 #include <vector>
 
 // Класс управляющего, наследуется от Employee
@@ -13,6 +14,7 @@ class Manager : public Employee
 public:
 	using EmployeesType = std::vector<Employee*>;
 	using MenuItemsType = std::vector<MenuItem*>;
+	using OrdersType = std::vector<Order*>;
 
 private:
 	// Дополнительные поля для менеджера при необходимости
@@ -40,8 +42,9 @@ public:
 	void EditMenuItem(MenuItem* menuItem, const std::string& newName,
 					  double newCostPrice, double newSellingPrice);	// Редактировать позицию в меню
 
-	// Методы просмотра отчетов (базовая версия, будет расширена при создании Order)
-	void ViewSalesReport(const MenuItemsType& menuItems) const;	// Просмотр отчетов по продажам
+	// Методы просмотра отчетов
+	void ViewSalesReport(const MenuItemsType& menuItems) const;	// Просмотр отчетов по продажам по позициям меню
+	void ViewOrdersReport(const OrdersType& orders) const;		// Просмотр отчетов по заказам
 
 	// Методы управления складом
 	void ManageInventory(Inventory* inventory);					// Управление складом (вызов отчета)

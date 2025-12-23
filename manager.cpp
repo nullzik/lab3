@@ -148,3 +148,53 @@ void Manager::ManageInventory(Inventory* inventory)
 	}
 }
 
+void Manager::ViewOrdersReport(const OrdersType& orders) const
+{
+	std::cout << "=== Отчет по заказам ===" << std::endl;
+	std::cout << "Отчет создан менеджером: " << GetFullName() << std::endl;
+	std::cout << std::endl;
+
+	if (orders.empty())
+	{
+		std::cout << "Заказов нет." << std::endl;
+	}
+	else
+	{
+		double totalRevenue = 0.0;
+		int totalOrders = 0;
+
+		for (const auto* order : orders)
+		{
+			if (order != nullptr)
+			{
+				totalRevenue += order->GetTotalAmount();
+				totalOrders++;
+			}
+		}
+
+		std::cout << "Общее количество заказов: " << totalOrders << std::endl;
+		std::cout << "Общая выручка: " << std::fixed << std::setprecision(2) 
+				  << totalRevenue << " руб." << std::endl;
+		
+		if (totalOrders > 0)
+		{
+			std::cout << "Средний чек: " << (totalRevenue / totalOrders) << " руб." << std::endl;
+		}
+
+		std::cout << std::endl;
+		std::cout << "Детали заказов:" << std::endl;
+		
+		for (const auto* order : orders)
+		{
+			if (order != nullptr)
+			{
+				std::cout << "  Заказ #" << order->GetOrderId() 
+						  << " - Сумма: " << order->GetTotalAmount() << " руб."
+						  << " - Блюд: " << order->GetMenuItemsCount() << std::endl;
+			}
+		}
+	}
+
+	std::cout << "=========================" << std::endl;
+}
+
