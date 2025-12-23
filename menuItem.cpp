@@ -115,3 +115,4 @@ void MenuItem::SetSalesCount(int salesCount)
 	m_salesCount = salesCount;
 }
 
+
