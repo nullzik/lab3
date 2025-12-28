@@ -119,9 +119,8 @@ public class MenuItem {
         this.salesCount = salesCount;
     }
 
-    // Метод для увеличения счетчика продаж (будет использоваться при завершении заказа)
+    // Метод для увеличения счетчика продаж (используется при завершении заказа в Order.completeOrder())
     public void incrementSalesCount() {
-        // TODO: будет связано с Order.CompleteOrder() и Employee.addSales()
         this.salesCount++;
     }
 }
