@@ -16,14 +16,22 @@ Inventory::Inventory(const std::string& warehouseName)
 
 void Inventory::AddProduct(const Product& product)
 {
-	m_products.push_back(product);
+	m_products.push_back(std::make_shared<Product>(product));
+}
+
+void Inventory::AddProduct(std::shared_ptr<Product> product)
+{
+	if (product != nullptr)
+	{
+		m_products.push_back(product);
+	}
 }
 
 bool Inventory::RemoveProduct(const std::string& productName)
 {
 	auto it = std::find_if(m_products.begin(), m_products.end(),
-		[&productName](const Product& p) {
-			return p.GetName() == productName;
+		[&productName](const std::shared_ptr<Product>& p) {
+			return p != nullptr && p->GetName() == productName;
 		});
 
 	if (it != m_products.end())
@@ -34,13 +42,13 @@ bool Inventory::RemoveProduct(const std::string& productName)
 	return false;
 }
 
-Product* Inventory::FindProduct(const std::string& productName)
+std::shared_ptr<Product> Inventory::FindProduct(const std::string& productName)
 {
 	for (auto& product : m_products)
 	{
-		if (product.GetName() == productName)
+		if (product != nullptr && product->GetName() == productName)
 		{
-			return &product;
+			return product;
 		}
 	}
 	return nullptr;	// Продукт не найден
@@ -54,17 +62,20 @@ void Inventory::PrintExpiryDates() const
 	
 	for (const auto& product : m_products)
 	{
-		if (!product.CheckExpiryDate())
+		if (product != nullptr)
 		{
-			hasExpiredProducts = true;
-			std::cout << "ВНИМАНИЕ! Продукт '" << product.GetName() 
-					  << "' просрочен!" << std::endl;
-		}
-		else
-		{
-			int daysLeft = product.GetDaysUntilExpiry();
-			std::cout << "Продукт: " << product.GetName() 
-					  << " - дней до истечения: " << daysLeft << std::endl;
+			if (!product->CheckExpiryDate())
+			{
+				hasExpiredProducts = true;
+				std::cout << "ВНИМАНИЕ! Продукт '" << product->GetName() 
+						  << "' просрочен!" << std::endl;
+			}
+			else
+			{
+				int daysLeft = product->GetDaysUntilExpiry();
+				std::cout << "Продукт: " << product->GetName() 
+						  << " - дней до истечения: " << daysLeft << std::endl;
+			}
 		}
 	}
 	
@@ -94,9 +105,12 @@ void Inventory::PrintInventoryReport() const
 	{
 		for (size_t i = 0; i < m_products.size(); ++i)
 		{
-			std::cout << "--- Продукт #" << (i + 1) << " ---" << std::endl;
-			m_products[i].PrintInfo();
-			std::cout << std::endl;
+			if (m_products[i] != nullptr)
+			{
+				std::cout << "--- Продукт #" << (i + 1) << " ---" << std::endl;
+				m_products[i]->PrintInfo();
+				std::cout << std::endl;
+			}
 		}
 	}
 	

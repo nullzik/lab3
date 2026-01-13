@@ -16,7 +16,7 @@ Order::Order()
 {
 }
 
-Order::Order(Employee* employee)
+Order::Order(std::shared_ptr<Employee> employee)
 	: m_orderId(s_nextOrderId++)
 	, m_menuItems()
 	, m_totalAmount(0.0)
@@ -25,7 +25,7 @@ Order::Order(Employee* employee)
 {
 }
 
-bool Order::AddMenuItem(MenuItem* menuItem)
+bool Order::AddMenuItem(std::shared_ptr<MenuItem> menuItem)
 {
 	if (menuItem != nullptr)
 	{
@@ -51,7 +51,7 @@ bool Order::AddMenuItem(MenuItem* menuItem)
 bool Order::RemoveMenuItem(const std::string& menuItemName)
 {
 	auto it = std::find_if(m_menuItems.begin(), m_menuItems.end(),
-		[&menuItemName](MenuItem* item) {
+		[&menuItemName](const std::shared_ptr<MenuItem>& item) {
 			return item != nullptr && item->GetName() == menuItemName;
 		});
 
@@ -73,7 +73,7 @@ double Order::CalculateTotalAmount()
 {
 	m_totalAmount = 0.0;
 	
-	for (const auto* menuItem : m_menuItems)
+	for (const auto& menuItem : m_menuItems)
 	{
 		if (menuItem != nullptr)
 		{
@@ -114,7 +114,7 @@ void Order::PrintOrder() const
 	else
 	{
 		int index = 1;
-		for (const auto* menuItem : m_menuItems)
+		for (const auto& menuItem : m_menuItems)
 		{
 			if (menuItem != nullptr)
 			{
@@ -135,7 +135,7 @@ void Order::PrintOrder() const
 void Order::CompleteOrder()
 {
 	// Обновляем счетчики продаж для каждого блюда в заказе
-	for (auto* menuItem : m_menuItems)
+	for (auto& menuItem : m_menuItems)
 	{
 		if (menuItem != nullptr)
 		{
@@ -173,7 +173,7 @@ std::time_t Order::GetOrderTime() const
 	return m_orderTime;
 }
 
-Employee* Order::GetEmployee() const
+std::shared_ptr<Employee> Order::GetEmployee() const
 {
 	return m_employee;
 }
@@ -183,7 +183,7 @@ int Order::GetMenuItemsCount() const
 	return static_cast<int>(m_menuItems.size());
 }
 
-void Order::SetEmployee(Employee* employee)
+void Order::SetEmployee(std::shared_ptr<Employee> employee)
 {
 	m_employee = employee;
 }

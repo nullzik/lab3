@@ -21,7 +21,7 @@ Chef::Chef(const std::string& fullName, int age, const std::string& contactNumbe
 {
 }
 
-void Chef::AddProduct(Inventory* inventory, const Product& product)
+void Chef::AddProduct(std::shared_ptr<Inventory> inventory, const Product& product)
 {
 	if (inventory != nullptr)
 	{
@@ -32,7 +32,7 @@ void Chef::AddProduct(Inventory* inventory, const Product& product)
 	}
 }
 
-void Chef::WriteOffProduct(Product* product, double quantity, const std::string& reason)
+void Chef::WriteOffProduct(std::shared_ptr<Product> product, double quantity, const std::string& reason)
 {
 	if (product != nullptr && quantity > 0.0)
 	{
@@ -59,7 +59,7 @@ void Chef::WriteOffProduct(Product* product, double quantity, const std::string&
 	}
 }
 
-void Chef::AddTechCard(MenuItem* menuItem, const MenuItem::TechCardType& techCard)
+void Chef::AddTechCard(std::shared_ptr<MenuItem> menuItem, const MenuItem::TechCardType& techCard)
 {
 	if (menuItem != nullptr)
 	{
@@ -94,7 +94,7 @@ void Chef::PrintWriteOffsReport(std::time_t startTime, std::time_t endTime) cons
 
 		for (const auto& writeOff : m_writeOffs)
 		{
-			Product* product = writeOff.first;
+			const auto& product = writeOff.first;
 			double quantity = writeOff.second;
 			
 			if (product != nullptr)
@@ -139,7 +139,7 @@ void Chef::PrintShiftWriteOffsReport() const
 
 	for (const auto& writeOff : m_writeOffs)
 	{
-		Product* product = writeOff.first;
+		const auto& product = writeOff.first;
 		double quantity = writeOff.second;
 		
 		if (product != nullptr)
@@ -166,7 +166,7 @@ void Chef::PrintShiftWriteOffsReport() const
 	std::cout << "================================" << std::endl;
 }
 
-void Chef::ManageInventory(Inventory* inventory)
+void Chef::ManageInventory(std::shared_ptr<Inventory> inventory)
 {
 	if (inventory != nullptr)
 	{

@@ -16,7 +16,7 @@ Manager::Manager(const std::string& fullName, int age, const std::string& contac
 {
 }
 
-void Manager::AddPenalty(Employee* employee, double amount)
+void Manager::AddPenalty(std::shared_ptr<Employee> employee, double amount)
 {
 	if (employee != nullptr && amount > 0.0)
 	{
@@ -27,7 +27,7 @@ void Manager::AddPenalty(Employee* employee, double amount)
 	}
 }
 
-void Manager::AddBonus(Employee* employee, double amount)
+void Manager::AddBonus(std::shared_ptr<Employee> employee, double amount)
 {
 	if (employee != nullptr && amount > 0.0)
 	{
@@ -38,7 +38,7 @@ void Manager::AddBonus(Employee* employee, double amount)
 	}
 }
 
-void Manager::ChangeHourlyRate(Employee* employee, double newRate)
+void Manager::ChangeHourlyRate(std::shared_ptr<Employee> employee, double newRate)
 {
 	if (employee != nullptr && newRate >= 0.0)
 	{
@@ -48,7 +48,7 @@ void Manager::ChangeHourlyRate(Employee* employee, double newRate)
 	}
 }
 
-void Manager::ChangeHoursWorked(Employee* employee, double hours)
+void Manager::ChangeHoursWorked(std::shared_ptr<Employee> employee, double hours)
 {
 	if (employee != nullptr && hours >= 0.0)
 	{
@@ -58,7 +58,7 @@ void Manager::ChangeHoursWorked(Employee* employee, double hours)
 	}
 }
 
-void Manager::ResetHoursWorked(Employee* employee)
+void Manager::ResetHoursWorked(std::shared_ptr<Employee> employee)
 {
 	if (employee != nullptr)
 	{
@@ -68,7 +68,7 @@ void Manager::ResetHoursWorked(Employee* employee)
 	}
 }
 
-void Manager::ChangeSellingPrice(MenuItem* menuItem, double newPrice)
+void Manager::ChangeSellingPrice(std::shared_ptr<MenuItem> menuItem, double newPrice)
 {
 	if (menuItem != nullptr && newPrice >= 0.0)
 	{
@@ -78,15 +78,15 @@ void Manager::ChangeSellingPrice(MenuItem* menuItem, double newPrice)
 	}
 }
 
-MenuItem* Manager::CreateMenuItem(const std::string& name, double costPrice,
+std::shared_ptr<MenuItem> Manager::CreateMenuItem(const std::string& name, double costPrice,
 								  double sellingPrice, bool isAvailable)
 {
-	MenuItem* newItem = new MenuItem(name, costPrice, sellingPrice, isAvailable);
+	std::shared_ptr<MenuItem> newItem = std::make_shared<MenuItem>(name, costPrice, sellingPrice, isAvailable);
 	std::cout << "Создана новая позиция в меню: " << name << std::endl;
 	return newItem;
 }
 
-void Manager::EditMenuItem(MenuItem* menuItem, const std::string& newName,
+void Manager::EditMenuItem(std::shared_ptr<MenuItem> menuItem, const std::string& newName,
 						   double newCostPrice, double newSellingPrice)
 {
 	if (menuItem != nullptr)
@@ -113,7 +113,7 @@ void Manager::ViewSalesReport(const MenuItemsType& menuItems) const
 		double totalProfit = 0.0;
 		int totalSales = 0;
 
-		for (const auto* item : menuItems)
+		for (const auto& item : menuItems)
 		{
 			if (item != nullptr)
 			{
@@ -137,7 +137,7 @@ void Manager::ViewSalesReport(const MenuItemsType& menuItems) const
 	std::cout << "=========================" << std::endl;
 }
 
-void Manager::ManageInventory(Inventory* inventory)
+void Manager::ManageInventory(std::shared_ptr<Inventory> inventory)
 {
 	if (inventory != nullptr)
 	{
@@ -163,7 +163,7 @@ void Manager::ViewOrdersReport(const OrdersType& orders) const
 		double totalRevenue = 0.0;
 		int totalOrders = 0;
 
-		for (const auto* order : orders)
+		for (const auto& order : orders)
 		{
 			if (order != nullptr)
 			{
@@ -184,7 +184,7 @@ void Manager::ViewOrdersReport(const OrdersType& orders) const
 		std::cout << std::endl;
 		std::cout << "Детали заказов:" << std::endl;
 		
-		for (const auto* order : orders)
+		for (const auto& order : orders)
 		{
 			if (order != nullptr)
 			{

@@ -5,13 +5,14 @@
 #include "employee.hpp"
 #include <vector>
 #include <ctime>
+#include <memory>
 
 // Класс заказа
 // Связывает блюда из меню с сотрудником, который создал заказ
 class Order
 {
 public:
-	using MenuItemsType = std::vector<MenuItem*>;
+	using MenuItemsType = std::vector<std::shared_ptr<MenuItem>>;
 
 private:
 	static int s_nextOrderId;		// Статическая переменная для генерации уникальных ID заказов
@@ -19,16 +20,16 @@ private:
 	MenuItemsType m_menuItems;		// Блюда в заказе
 	double m_totalAmount;			// Сумма заказа
 	std::time_t m_orderTime;		// Время создания заказа
-	Employee* m_employee;			// Сотрудник, добавивший заказ
+	std::shared_ptr<Employee> m_employee;			// Сотрудник, добавивший заказ
 
 public:
 	// Конструкторы и деструктор
 	Order();
-	Order(Employee* employee);
+	Order(std::shared_ptr<Employee> employee);
 	~Order() = default;
 
 	// Публичные методы
-	bool AddMenuItem(MenuItem* menuItem);			// Добавить блюдо в заказ
+	bool AddMenuItem(std::shared_ptr<MenuItem> menuItem);			// Добавить блюдо в заказ
 	bool RemoveMenuItem(const std::string& menuItemName);	// Удалить блюдо из заказа
 	double CalculateTotalAmount();					// Рассчитать сумму заказа
 	void PrintOrder() const;						// Вывести информацию о заказе
@@ -41,11 +42,11 @@ public:
 	MenuItemsType GetMenuItems() const;
 	double GetTotalAmount() const;
 	std::time_t GetOrderTime() const;
-	Employee* GetEmployee() const;
+	std::shared_ptr<Employee> GetEmployee() const;
 	int GetMenuItemsCount() const;
 
 	// Сеттеры
-	void SetEmployee(Employee* employee);
+	void SetEmployee(std::shared_ptr<Employee> employee);
 };
 
 #endif // ORDER_HPP

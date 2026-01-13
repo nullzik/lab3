@@ -7,6 +7,8 @@
 #include "chef.hpp"
 #include "order.hpp"
 #include <ctime>
+#include <memory>
+#include <vector>
 
 int main()
 {
@@ -27,12 +29,12 @@ int main()
 	std::cout << std::endl;
 
 	// ============================================================
-	// 2. ДИНАМИЧЕСКАЯ ИНИЦИАЛИЗАЦИЯ ОБЪЕКТОВ (new, delete)
+	// 2. ДИНАМИЧЕСКАЯ ИНИЦИАЛИЗАЦИЯ ОБЪЕКТОВ (смарт-указатели)
 	// ============================================================
-	std::cout << "--- 2. Динамическая инициализация объектов (new, delete) ---" << std::endl;
+	std::cout << "--- 2. Динамическая инициализация объектов (смарт-указатели) ---" << std::endl;
 	
-	MenuItem* dynamicMenuItem = new MenuItem("Салат Цезарь", 80.0, 250.0, true);
-	Manager* dynamicManager = new Manager("Петров Петр Петрович", 35, "+7-900-765-43-21",
+	std::shared_ptr<MenuItem> dynamicMenuItem = std::make_shared<MenuItem>("Салат Цезарь", 80.0, 250.0, true);
+	std::shared_ptr<Manager> dynamicManager = std::make_shared<Manager>("Петров Петр Петрович", 35, "+7-900-765-43-21",
 										  "г. Москва, ул. Пушкина, д. 10", 1000.0,
 										  "manager1", "admin123");
 	
@@ -43,10 +45,8 @@ int main()
 	dynamicManager->ChangeSellingPrice(dynamicMenuItem, 280.0);
 	std::cout << "Новая цена после изменения: " << dynamicMenuItem->GetSellingPrice() << " руб." << std::endl;
 	
-	// Освобождаем память
-	delete dynamicMenuItem;
-	delete dynamicManager;
-	std::cout << "Динамические объекты удалены (delete)" << std::endl;
+	// Память автоматически освобождается смарт-указателями
+	std::cout << "Динамические объекты будут автоматически удалены (смарт-указатели)" << std::endl;
 	std::cout << std::endl;
 
 	// ============================================================
@@ -66,85 +66,91 @@ int main()
 	productPtr->SetPurchasePrice(50.0);
 	std::cout << "Изменение через указатель - цена закупки: " << productPtr->GetPurchasePrice() << " руб." << std::endl;
 	
-	// Передача указателя в функции других классов
-	Inventory inventory("Склад №1");
+	// Передача смарт-указателя в функции других классов
+	std::shared_ptr<Inventory> inventory = std::make_shared<Inventory>("Склад №1");
 	Chef chef("Сидоров Сидор Сидорович", 40, "+7-900-555-55-55",
 			  "г. Москва, ул. Кулинарная, д. 5", 800.0,
 			  "chef1", "cook123");
 	
-	chef.AddProduct(&inventory, product1);
-	std::cout << "Продукт добавлен на склад через указатель" << std::endl;
+	chef.AddProduct(inventory, product1);
+	std::cout << "Продукт добавлен на склад через смарт-указатель" << std::endl;
 	std::cout << std::endl;
 
 	// ============================================================
-	// 4. ДИНАМИЧЕСКИЙ МАССИВ ОБЪЕКТОВ КЛАССА
+	// 4. ДИНАМИЧЕСКИЙ МАССИВ ОБЪЕКТОВ КЛАССА (вектор смарт-указателей)
 	// ============================================================
-	std::cout << "--- 4. Динамический массив объектов класса ---" << std::endl;
+	std::cout << "--- 4. Динамический массив объектов класса (вектор смарт-указателей) ---" << std::endl;
 	
 	int menuSize = 3;
-	MenuItem* menuArray = new MenuItem[menuSize];
+	std::vector<std::shared_ptr<MenuItem>> menuArray;
 	
 	// Инициализация элементов массива
-	menuArray[0] = MenuItem("Пицца Маргарита", 150.0, 450.0, true);
-	menuArray[1] = MenuItem("Паста Карбонара", 120.0, 380.0, true);
-	menuArray[2] = MenuItem("Ризотто", 100.0, 320.0, false);
+	menuArray.push_back(std::make_shared<MenuItem>("Пицца Маргарита", 150.0, 450.0, true));
+	menuArray.push_back(std::make_shared<MenuItem>("Паста Карбонара", 120.0, 380.0, true));
+	menuArray.push_back(std::make_shared<MenuItem>("Ризотто", 100.0, 320.0, false));
 	
 	std::cout << "Создан динамический массив MenuItem (размер: " << menuSize << "):" << std::endl;
-	for (int i = 0; i < menuSize; ++i)
+	for (size_t i = 0; i < menuArray.size(); ++i)
 	{
-		std::cout << "  " << (i + 1) << ". " << menuArray[i].GetName() 
-				  << " - " << menuArray[i].GetSellingPrice() << " руб." << std::endl;
+		if (menuArray[i] != nullptr)
+		{
+			std::cout << "  " << (i + 1) << ". " << menuArray[i]->GetName() 
+					  << " - " << menuArray[i]->GetSellingPrice() << " руб." << std::endl;
+		}
 	}
 	
 	// Изменение элементов через индекс
-	menuArray[2].SetAvailability(true);
-	std::cout << "Доступность блюда 'Ризотто' изменена на: " 
-			  << (menuArray[2].IsAvailable() ? "Доступно" : "Недоступно") << std::endl;
+	if (menuArray[2] != nullptr)
+	{
+		menuArray[2]->SetAvailability(true);
+		std::cout << "Доступность блюда 'Ризотто' изменена на: " 
+				  << (menuArray[2]->IsAvailable() ? "Доступно" : "Недоступно") << std::endl;
+	}
 	
-	delete[] menuArray;
-	std::cout << "Динамический массив удален (delete[])" << std::endl;
+	// Память автоматически освобождается
+	std::cout << "Динамический массив будет автоматически удален (смарт-указатели)" << std::endl;
 	std::cout << std::endl;
 
 	// ============================================================
-	// 5. МАССИВ ДИНАМИЧЕСКИХ ОБЪЕКТОВ КЛАССА
+	// 5. МАССИВ ДИНАМИЧЕСКИХ ОБЪЕКТОВ КЛАССА (вектор смарт-указателей)
 	// ============================================================
-	std::cout << "--- 5. Массив динамических объектов класса ---" << std::endl;
+	std::cout << "--- 5. Массив динамических объектов класса (вектор смарт-указателей) ---" << std::endl;
 	
-	int employeesCount = 3;
-	Employee** employeesArray = new Employee*[employeesCount];
+	std::vector<std::shared_ptr<Employee>> employeesArray;
 	
-	// Создание динамических объектов и сохранение указателей в массив
-	employeesArray[0] = new Employee("Кузнецов Кузьма Кузьмич", 28, "+7-900-111-22-33",
+	// Создание динамических объектов и сохранение смарт-указателей в вектор
+	employeesArray.push_back(std::make_shared<Employee>("Кузнецов Кузьма Кузьмич", 28, "+7-900-111-22-33",
 									 "г. Москва, ул. Рабочая, д. 20", "Официант",
-									 450.0, "waiter1", "pass1");
-	employeesArray[1] = new Chef("Поваров Повар Поварович", 32, "+7-900-222-33-44",
+									 450.0, "waiter1", "pass1"));
+	employeesArray.push_back(std::make_shared<Chef>("Поваров Повар Поварович", 32, "+7-900-222-33-44",
 								 "г. Москва, ул. Кухонная, д. 15", 750.0,
-								 "chef2", "pass2");
-	employeesArray[2] = new Manager("Директоров Директор Директорович", 45, "+7-900-333-44-55",
+								 "chef2", "pass2"));
+	employeesArray.push_back(std::make_shared<Manager>("Директоров Директор Директорович", 45, "+7-900-333-44-55",
 									"г. Москва, ул. Управленческая, д. 1", 1500.0,
-									"director", "admin");
+									"director", "admin"));
 	
-	std::cout << "Создан массив указателей на динамические объекты Employee (размер: " << employeesCount << "):" << std::endl;
-	for (int i = 0; i < employeesCount; ++i)
+	std::cout << "Создан вектор смарт-указателей на динамические объекты Employee (размер: " << employeesArray.size() << "):" << std::endl;
+	for (size_t i = 0; i < employeesArray.size(); ++i)
 	{
-		std::cout << "  " << (i + 1) << ". " << employeesArray[i]->GetFullName() 
-				  << " (" << employeesArray[i]->GetPosition() << ")" << std::endl;
+		if (employeesArray[i] != nullptr)
+		{
+			std::cout << "  " << (i + 1) << ". " << employeesArray[i]->GetFullName() 
+					  << " (" << employeesArray[i]->GetPosition() << ")" << std::endl;
+		}
 	}
 	
-	// Вызов методов через указатели
-	employeesArray[0]->SetHoursWorked(160.0);
-	std::cout << "Отработанные часы первого сотрудника: " 
-			  << employeesArray[0]->GetHoursWorked() << std::endl;
-	std::cout << "Зарплата первого сотрудника: " 
-			  << employeesArray[0]->CalculateSalary() << " руб." << std::endl;
-	
-	// Удаление динамических объектов и массива указателей
-	for (int i = 0; i < employeesCount; ++i)
+	// Вызов методов через смарт-указатели
+	if (employeesArray[0] != nullptr)
 	{
-		delete employeesArray[i];
+		employeesArray[0]->SetHoursWorked(160.0);
+		std::cout << "Отработанные часы первого сотрудника: " 
+				  << employeesArray[0]->GetHoursWorked() << std::endl;
+		std::cout << "Зарплата первого сотрудника: " 
+				  << employeesArray[0]->CalculateSalary() << " руб." << std::endl;
 	}
-	delete[] employeesArray;
-	std::cout << "Динамические объекты и массив указателей удалены" << std::endl;
+	
+	// Память автоматически освобождается
+	std::cout << "Динамические объекты будут автоматически удалены (смарт-указатели)" << std::endl;
 	std::cout << std::endl;
 
 	// ============================================================
@@ -157,16 +163,16 @@ int main()
 					"г. Москва, ул. Главная, д. 1", 1200.0,
 					"main_manager", "secure_pass");
 	
-	// Создаем блюда через менеджера
-	MenuItem* pizza = manager.CreateMenuItem("Пицца Пепперони", 200.0, 550.0, true);
-	MenuItem* pasta = manager.CreateMenuItem("Лазанья", 180.0, 480.0, true);
+	// Создаем блюда через менеджера и оборачиваем в shared_ptr
+	std::shared_ptr<MenuItem> pizza(manager.CreateMenuItem("Пицца Пепперони", 200.0, 550.0, true));
+	std::shared_ptr<MenuItem> pasta(manager.CreateMenuItem("Лазанья", 180.0, 480.0, true));
 	
-	// Создаем сотрудника-официанта
-	Employee* waiter = new Employee("Официант Тестовый", 22, "+7-900-000-00-00",
+	// Создаем сотрудника-официанта с использованием shared_ptr
+	std::shared_ptr<Employee> waiter = std::make_shared<Employee>("Официант Тестовый", 22, "+7-900-000-00-00",
 									"г. Москва", "Официант",
 									400.0, "waiter_test", "test");
 	
-	// Создаем заказы
+	// Создаем заказы (используем локальный объект для демонстрации)
 	Order order1(waiter);
 	order1.AddMenuItem(pizza);
 	order1.AddMenuItem(pasta);
@@ -176,7 +182,7 @@ int main()
 	order1.CompleteOrder();
 	
 	// Создаем шеф-повара и работаем со складом
-	Chef* chefPtr = new Chef("Шеф Тестовый", 38, "+7-900-777-77-77",
+	std::shared_ptr<Chef> chefPtr = std::make_shared<Chef>("Шеф Тестовый", 38, "+7-900-777-77-77",
 							 "г. Москва", 900.0,
 							 "chef_test", "chef_pass");
 	
@@ -185,11 +191,11 @@ int main()
 	Product tomato("Помидоры", 30.0, "Ферма", 80.0, now + 86400 * 7, now);
 	Product cheese("Сыр", 20.0, "Молокозавод", 350.0, now + 86400 * 14, now);
 	
-	chefPtr->AddProduct(&inventory, tomato);
-	chefPtr->AddProduct(&inventory, cheese);
+	chefPtr->AddProduct(inventory, tomato);
+	chefPtr->AddProduct(inventory, cheese);
 	
 	// Шеф-повар списывает продукты
-	Product* tomatoOnWarehouse = inventory.FindProduct("Помидоры");
+	std::shared_ptr<Product> tomatoOnWarehouse = inventory->FindProduct("Помидоры");
 	if (tomatoOnWarehouse != nullptr)
 	{
 		chefPtr->WriteOffProduct(tomatoOnWarehouse, 5.0, "Приготовление пиццы");
@@ -205,10 +211,12 @@ int main()
 	chefPtr->AddTechCard(pizza, techCard);
 	
 	// Менеджер просматривает отчеты
-	std::vector<MenuItem*> menuItems = {pizza, pasta};
+	std::vector<std::shared_ptr<MenuItem>> menuItems = {pizza, pasta};
 	manager.ViewSalesReport(menuItems);
 	
-	std::vector<Order*> orders = {&order1};
+	// Создаем shared_ptr для order1 (с пустым deleter, так как order1 на стеке)
+	std::shared_ptr<Order> order1Ptr(&order1, [](Order*) {});
+	std::vector<std::shared_ptr<Order>> orders = {order1Ptr};
 	manager.ViewOrdersReport(orders);
 	
 	// Менеджер управляет сотрудником
@@ -219,16 +227,12 @@ int main()
 	std::cout << "Новая почасовая ставка официанта: " << waiter->GetHourlyRate() << " руб./час" << std::endl;
 	
 	// Просмотр склада
-	chefPtr->ManageInventory(&inventory);
+	chefPtr->ManageInventory(inventory);
 	
 	// Отчет о списаниях
 	chefPtr->PrintShiftWriteOffsReport();
 	
-	// Освобождение памяти
-	delete waiter;
-	delete chefPtr;
-	delete pizza;
-	delete pasta;
+	// Память автоматически освобождается смарт-указателями
 	
 	std::cout << "\n=== Демонстрация завершена ===" << std::endl;
 	

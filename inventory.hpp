@@ -3,12 +3,13 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "product.hpp"
 
 class Inventory
 {
 public:
-	using ProductsType = std::vector<Product>;
+	using ProductsType = std::vector<std::shared_ptr<Product>>;
 
 private:
 	std::string m_warehouseName;
@@ -21,9 +22,10 @@ public:
 	~Inventory() = default;
 
 	// Публичные методы
-	void AddProduct(const Product& product);			// Добавить продукт на склад
+	void AddProduct(std::shared_ptr<Product> product);			// Добавить продукт на склад
+	void AddProduct(const Product& product);			// Добавить продукт на склад (копия)
 	bool RemoveProduct(const std::string& productName);	// Удалить продукт со склада по имени
-	Product* FindProduct(const std::string& productName);	// Найти продукт по имени (возвращает указатель)
+	std::shared_ptr<Product> FindProduct(const std::string& productName);	// Найти продукт по имени (возвращает указатель)
 	void PrintExpiryDates() const;						// Вывести информацию о сроках годности всех продуктов
 	void PrintInventoryReport() const;					// Вывести отчет о хранимых продуктах
 
