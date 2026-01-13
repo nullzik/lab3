@@ -26,6 +26,32 @@ int main()
 	
 	std::cout << "Создан статический объект MenuItem: " << staticMenuItem.GetName() << std::endl;
 	std::cout << "Создан статический объект Employee: " << staticEmployee.GetFullName() << std::endl;
+	
+	// Демонстрация работы с std::string: конкатенация и поиск
+	std::string employeeInfo = "Сотрудник: ";
+	employeeInfo += staticEmployee.GetFullName();  // Конкатенация через оператор +=
+	employeeInfo += " (" + staticEmployee.GetPosition() + ")";  // Конкатенация через оператор +
+	std::cout << employeeInfo << std::endl;
+	
+	// Поиск подстроки в строке
+	std::string fullName = staticEmployee.GetFullName();
+	size_t pos = fullName.find("Иван");  // Поиск подстроки
+	if (pos != std::string::npos)
+	{
+		std::cout << "Найдено имя 'Иван' в позиции: " << pos << std::endl;
+	}
+	
+	// Замена подстроки
+	std::string address = staticEmployee.GetAddress();
+	std::string newAddress = address;
+	size_t replacePos = newAddress.find("Ленина");
+	if (replacePos != std::string::npos)
+	{
+		newAddress.replace(replacePos, 6, "Пушкина");  // Замена подстроки
+		std::cout << "Старый адрес: " << address << std::endl;
+		std::cout << "Новый адрес: " << newAddress << std::endl;
+	}
+	
 	std::cout << std::endl;
 
 	// ============================================================

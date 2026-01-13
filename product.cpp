@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <ctime>
 #include <cmath>
+#include <sstream>
 
 Product::Product()
 	: m_name("")
@@ -63,14 +64,16 @@ void Product::PrintInfo() const
 	std::cout << "Поставщик: " << m_supplier << std::endl;
 	std::cout << "Цена закупки: " << m_purchasePrice << " руб." << std::endl;
 	
-	// Вывод даты поступления
-	char receiptDateStr[100];
-	std::strftime(receiptDateStr, sizeof(receiptDateStr), "%d.%m.%Y", std::localtime(&m_receiptDate));
+	// Вывод даты поступления (использование std::string вместо массива char)
+	std::string receiptDateStr(100, '\0');
+	std::strftime(&receiptDateStr[0], receiptDateStr.size(), "%d.%m.%Y", std::localtime(&m_receiptDate));
+	receiptDateStr.resize(std::strlen(receiptDateStr.c_str()));  // Обрезаем до реальной длины
 	std::cout << "Дата поступления: " << receiptDateStr << std::endl;
 	
-	// Вывод срока годности
-	char expiryDateStr[100];
-	std::strftime(expiryDateStr, sizeof(expiryDateStr), "%d.%m.%Y", std::localtime(&m_expiryDate));
+	// Вывод срока годности (использование std::string вместо массива char)
+	std::string expiryDateStr(100, '\0');
+	std::strftime(&expiryDateStr[0], expiryDateStr.size(), "%d.%m.%Y", std::localtime(&m_expiryDate));
+	expiryDateStr.resize(std::strlen(expiryDateStr.c_str()));  // Обрезаем до реальной длины
 	std::cout << "Срок годности: " << expiryDateStr << std::endl;
 	
 	// Проверка срока годности

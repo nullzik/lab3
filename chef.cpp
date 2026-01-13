@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <ctime>
+#include <cstring>
 
 Chef::Chef()
 	: Employee()
@@ -74,11 +75,13 @@ void Chef::PrintWriteOffsReport(std::time_t startTime, std::time_t endTime) cons
 	std::cout << "=== Отчет о списаниях за период ===" << std::endl;
 	std::cout << "Шеф-повар: " << GetFullName() << std::endl;
 	
-	// Форматируем даты
-	char startDateStr[100];
-	char endDateStr[100];
-	std::strftime(startDateStr, sizeof(startDateStr), "%d.%m.%Y %H:%M", std::localtime(&startTime));
-	std::strftime(endDateStr, sizeof(endDateStr), "%d.%m.%Y %H:%M", std::localtime(&endTime));
+	// Форматируем даты (использование std::string вместо массива char)
+	std::string startDateStr(100, '\0');
+	std::string endDateStr(100, '\0');
+	std::strftime(&startDateStr[0], startDateStr.size(), "%d.%m.%Y %H:%M", std::localtime(&startTime));
+	std::strftime(&endDateStr[0], endDateStr.size(), "%d.%m.%Y %H:%M", std::localtime(&endTime));
+	startDateStr.resize(std::strlen(startDateStr.c_str()));  // Обрезаем до реальной длины
+	endDateStr.resize(std::strlen(endDateStr.c_str()));  // Обрезаем до реальной длины
 	
 	std::cout << "Период: с " << startDateStr << " по " << endDateStr << std::endl;
 	std::cout << std::endl;
@@ -127,8 +130,10 @@ void Chef::PrintShiftWriteOffsReport() const
 		return;
 	}
 
-	char shiftStartStr[100];
-	std::strftime(shiftStartStr, sizeof(shiftStartStr), "%d.%m.%Y %H:%M", std::localtime(&m_shiftStartTime));
+	// Использование std::string вместо массива char
+	std::string shiftStartStr(100, '\0');
+	std::strftime(&shiftStartStr[0], shiftStartStr.size(), "%d.%m.%Y %H:%M", std::localtime(&m_shiftStartTime));
+	shiftStartStr.resize(std::strlen(shiftStartStr.c_str()));  // Обрезаем до реальной длины
 	std::cout << "Начало смены: " << shiftStartStr << std::endl;
 	std::cout << std::endl;
 

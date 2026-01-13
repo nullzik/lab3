@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <ctime>
+#include <cstring>
 
 // Инициализация статической переменной для генерации ID заказов
 int Order::s_nextOrderId = 1;
@@ -88,9 +89,10 @@ void Order::PrintOrder() const
 {
 	std::cout << "=== Заказ #" << m_orderId << " ===" << std::endl;
 	
-	// Вывод времени заказа
-	char timeStr[100];
-	std::strftime(timeStr, sizeof(timeStr), "%d.%m.%Y %H:%M:%S", std::localtime(&m_orderTime));
+	// Вывод времени заказа (использование std::string вместо массива char)
+	std::string timeStr(100, '\0');
+	std::strftime(&timeStr[0], timeStr.size(), "%d.%m.%Y %H:%M:%S", std::localtime(&m_orderTime));
+	timeStr.resize(std::strlen(timeStr.c_str()));  // Обрезаем до реальной длины
 	std::cout << "Время создания: " << timeStr << std::endl;
 	
 	// Вывод информации о сотруднике
