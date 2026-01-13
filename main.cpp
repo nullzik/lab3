@@ -66,6 +66,17 @@ int main()
 	productPtr->SetPurchasePrice(50.0);
 	std::cout << "Изменение через указатель - цена закупки: " << productPtr->GetPurchasePrice() << " руб." << std::endl;
 	
+	// Демонстрация дружественной функции: сравнение продуктов по цене
+	Product product2("Сахар", 100.0, "ООО Поставщик", 60.0, std::time(nullptr) + 86400 * 60, std::time(nullptr));
+	if (CompareProductsByPrice(product1, product2))
+	{
+		std::cout << "Продукт '" << product1.GetName() << "' дешевле продукта '" << product2.GetName() << "'" << std::endl;
+	}
+	else
+	{
+		std::cout << "Продукт '" << product2.GetName() << "' дешевле продукта '" << product1.GetName() << "'" << std::endl;
+	}
+	
 	// Передача смарт-указателя в функции других классов
 	std::shared_ptr<Inventory> inventory = std::make_shared<Inventory>("Склад №1");
 	Chef chef("Сидоров Сидор Сидорович", 40, "+7-900-555-55-55",
@@ -106,6 +117,14 @@ int main()
 		std::cout << "Доступность блюда 'Ризотто' изменена на: " 
 				  << (menuArray[2]->IsAvailable() ? "Доступно" : "Недоступно") << std::endl;
 	}
+	
+	// Демонстрация дружественной функции: расчет общей стоимости меню
+	std::vector<MenuItem> menuItemsForCalc;
+	menuItemsForCalc.push_back(MenuItem("Пицца Маргарита", 150.0, 450.0, true));
+	menuItemsForCalc.push_back(MenuItem("Паста Карбонара", 120.0, 380.0, true));
+	menuItemsForCalc.push_back(MenuItem("Ризотто", 100.0, 320.0, true));
+	double totalCost = CalculateTotalMenuCost(menuItemsForCalc);
+	std::cout << "Общая стоимость меню (дружественная функция): " << totalCost << " руб." << std::endl;
 	
 	// Память автоматически освобождается
 	std::cout << "Динамический массив будет автоматически удален (смарт-указатели)" << std::endl;

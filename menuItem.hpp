@@ -44,7 +44,13 @@ public:
 	void SetSellingPrice(double sellingPrice);
 	void SetTechCard(const TechCardType& techCard);
 	void SetSalesCount(int salesCount);
+
+	// Дружественная функция для расчета общей стоимости меню
+	friend double CalculateTotalMenuCost(const std::vector<MenuItem>& menuItems);
 };
+
+// Дружественная функция: расчет общей стоимости меню из нескольких блюд
+double CalculateTotalMenuCost(const std::vector<MenuItem>& menuItems);
 
 #endif // MENUITEM_HPP
 

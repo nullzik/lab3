@@ -151,4 +151,11 @@ void Product::SetReceiptDate(std::time_t receiptDate)
 	m_receiptDate = receiptDate;
 }
 
+// Реализация дружественной функции: сравнение продуктов по цене закупки
+bool CompareProductsByPrice(const Product& p1, const Product& p2)
+{
+	// Дружественная функция имеет доступ к приватным полям
+	return p1.m_purchasePrice < p2.m_purchasePrice;
+}
+
 

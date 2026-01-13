@@ -115,4 +115,19 @@ void MenuItem::SetSalesCount(int salesCount)
 	m_salesCount = salesCount;
 }
 
+// Реализация дружественной функции: расчет общей стоимости меню
+double CalculateTotalMenuCost(const std::vector<MenuItem>& menuItems)
+{
+	double totalCost = 0.0;
+	// Дружественная функция имеет доступ к приватным полям
+	for (const auto& item : menuItems)
+	{
+		if (item.m_isAvailable)  // Учитываем только доступные блюда
+		{
+			totalCost += item.m_sellingPrice;
+		}
+	}
+	return totalCost;
+}
+
 

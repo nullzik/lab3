@@ -43,7 +43,13 @@ public:
 	void SetSupplier(const std::string& supplier);
 	void SetExpiryDate(std::time_t expiryDate);
 	void SetReceiptDate(std::time_t receiptDate);
+
+	// Дружественная функция для сравнения продуктов по цене закупки
+	friend bool CompareProductsByPrice(const Product& p1, const Product& p2);
 };
+
+// Дружественная функция: сравнение двух продуктов по цене закупки
+bool CompareProductsByPrice(const Product& p1, const Product& p2);
 
 #endif // PRODUCT_HPP
 
