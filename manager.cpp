@@ -16,6 +16,12 @@ Manager::Manager(const std::string& fullName, int age, const std::string& contac
 {
 }
 
+// Конструктор копирования: вызывает конструктор копирования базового класса Employee
+Manager::Manager(const Manager& other)
+	: Employee(other)  // Вызов конструктора копирования базового класса
+{
+}
+
 void Manager::AddPenalty(std::shared_ptr<Employee> employee, double amount)
 {
 	if (employee != nullptr && amount > 0.0)

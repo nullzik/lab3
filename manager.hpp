@@ -27,6 +27,7 @@ public:
 	Manager(const std::string& fullName, int age, const std::string& contactNumber,
 			const std::string& address, double hourlyRate,
 			const std::string& login, const std::string& password);
+	Manager(const Manager& other);		// Конструктор копирования (вызывает конструктор копирования базового класса)
 	~Manager() = default;
 
 	// Методы управления сотрудниками

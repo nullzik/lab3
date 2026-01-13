@@ -248,9 +248,20 @@ int main()
 	std::cout << "--- 6. Комплексная демонстрация взаимодействия классов ---" << std::endl;
 	
 	// Создаем менеджер
+	// Демонстрация вызова конструктора базового класса из конструктора дочернего класса
+	std::cout << "\n--- Демонстрация вызова конструктора базового класса для Manager ---" << std::endl;
+	std::cout << "Создание объекта Manager (дочерний класс) вызывает конструктор Employee (базовый класс)" << std::endl;
 	Manager manager("Главный Менеджер", 40, "+7-900-999-99-99",
 					"г. Москва, ул. Главная, д. 1", 1200.0,
 					"main_manager", "secure_pass");
+	std::cout << "Manager создан: " << manager.GetFullName() << ", должность: " << manager.GetPosition() << std::endl;
+	std::cout << "Должность 'Менеджер' установлена через конструктор базового класса Employee" << std::endl;
+	
+	// Демонстрация конструктора копирования дочернего класса
+	Manager managerCopy(manager);  // Вызывает конструктор копирования Manager, который вызывает конструктор копирования Employee
+	std::cout << "Создана копия Manager через конструктор копирования" << std::endl;
+	std::cout << "Оригинал: " << manager.GetFullName() << ", Копия: " << managerCopy.GetFullName() << std::endl;
+	std::cout << "Оба объекта имеют должность: " << managerCopy.GetPosition() << " (унаследовано от Employee)" << std::endl;
 	
 	// Создаем блюда через менеджера и оборачиваем в shared_ptr
 	std::shared_ptr<MenuItem> pizza(manager.CreateMenuItem("Пицца Пепперони", 200.0, 550.0, true));
@@ -279,9 +290,22 @@ int main()
 	order1.CompleteOrder();
 	
 	// Создаем шеф-повара и работаем со складом
+	// Демонстрация вызова конструктора базового класса из конструктора дочернего класса
+	std::cout << "\n--- Демонстрация вызова конструктора базового класса из дочернего ---" << std::endl;
+	std::cout << "Создание объекта Chef (дочерний класс) вызывает конструктор Employee (базовый класс)" << std::endl;
 	std::shared_ptr<Chef> chefPtr = std::make_shared<Chef>("Шеф Тестовый", 38, "+7-900-777-77-77",
 							 "г. Москва", 900.0,
 							 "chef_test", "chef_pass");
+	std::cout << "Chef создан: " << chefPtr->GetFullName() << ", должность: " << chefPtr->GetPosition() << std::endl;
+	std::cout << "Должность установлена через конструктор базового класса Employee" << std::endl;
+	
+	// Демонстрация конструктора копирования дочернего класса
+	Chef chefOriginal("Оригинальный Шеф", 35, "+7-900-111-11-11",
+					  "г. Москва", 850.0, "chef_orig", "pass_orig");
+	Chef chefCopy(chefOriginal);  // Вызывает конструктор копирования Chef, который вызывает конструктор копирования Employee
+	std::cout << "Создана копия Chef через конструктор копирования" << std::endl;
+	std::cout << "Оригинал: " << chefOriginal.GetFullName() << ", Копия: " << chefCopy.GetFullName() << std::endl;
+	std::cout << "Оба объекта имеют должность: " << chefCopy.GetPosition() << " (унаследовано от Employee)" << std::endl;
 	
 	// Создаем продукты и добавляем на склад
 	std::time_t now = std::time(nullptr);

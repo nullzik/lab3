@@ -26,6 +26,7 @@ public:
 	Chef(const std::string& fullName, int age, const std::string& contactNumber,
 		 const std::string& address, double hourlyRate,
 		 const std::string& login, const std::string& password);
+	Chef(const Chef& other);		// Конструктор копирования (вызывает конструктор копирования базового класса)
 	~Chef() = default;
 
 	// Методы работы с продуктами и складом

@@ -22,6 +22,14 @@ Chef::Chef(const std::string& fullName, int age, const std::string& contactNumbe
 {
 }
 
+// Конструктор копирования: вызывает конструктор копирования базового класса Employee
+Chef::Chef(const Chef& other)
+	: Employee(other)  // Вызов конструктора копирования базового класса
+	, m_writeOffs(other.m_writeOffs)
+	, m_shiftStartTime(other.m_shiftStartTime)
+{
+}
+
 void Chef::AddProduct(std::shared_ptr<Inventory> inventory, const Product& product)
 {
 	if (inventory != nullptr)
