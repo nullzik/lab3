@@ -188,3 +188,10 @@ void Order::SetEmployee(std::shared_ptr<Employee> employee)
 	m_employee = employee;
 }
 
+// Реализация перегруженного оператора для Order
+Order& Order::operator+=(std::shared_ptr<MenuItem> menuItem)
+{
+	AddMenuItem(menuItem);
+	return *this;
+}
+

@@ -54,6 +54,10 @@ public:
 	void SetHoursWorked(double hoursWorked);
 	void SetHourlyRate(double hourlyRate);
 	void SetSalaryBalance(double salaryBalance);
+
+	// Перегрузка операторов
+	Employee& operator+=(double hours);				// Оператор += для добавления отработанных часов
+	bool operator==(const Employee& other) const;	// Оператор == для сравнения сотрудников по логину
 };
 
 #endif // EMPLOYEE_HPP

@@ -77,6 +77,17 @@ int main()
 		std::cout << "Продукт '" << product2.GetName() << "' дешевле продукта '" << product1.GetName() << "'" << std::endl;
 	}
 	
+	// Демонстрация перегрузки операторов для Product
+	std::cout << "Вес продукта до оператора +=: " << product1.GetWeight() << " кг" << std::endl;
+	product1 += 25.0;  // Использование оператора +=
+	std::cout << "Вес продукта после оператора += 25.0: " << product1.GetWeight() << " кг" << std::endl;
+	
+	Product product3("Мука", 50.0, "Другой поставщик", 45.0, std::time(nullptr) + 86400 * 30, std::time(nullptr));
+	if (product1 == product3)  // Использование оператора ==
+	{
+		std::cout << "Продукты '" << product1.GetName() << "' и '" << product3.GetName() << "' одинаковые (по имени)" << std::endl;
+	}
+	
 	// Передача смарт-указателя в функции других классов
 	std::shared_ptr<Inventory> inventory = std::make_shared<Inventory>("Склад №1");
 	Chef chef("Сидоров Сидор Сидорович", 40, "+7-900-555-55-55",
@@ -126,6 +137,22 @@ int main()
 	double totalCost = CalculateTotalMenuCost(menuItemsForCalc);
 	std::cout << "Общая стоимость меню (дружественная функция): " << totalCost << " руб." << std::endl;
 	
+	// Демонстрация перегрузки операторов для MenuItem
+	MenuItem item1("Борщ", 50.0, 150.0, true);
+	MenuItem item2("Салат", 30.0, 100.0, true);
+	std::cout << "Продаж блюда до оператора +=: " << item1.GetSalesCount() << std::endl;
+	item1 += 5;  // Использование оператора +=
+	std::cout << "Продаж блюда после оператора += 5: " << item1.GetSalesCount() << std::endl;
+	
+	if (item1 < item2)  // Использование оператора <
+	{
+		std::cout << "Блюдо '" << item1.GetName() << "' дешевле блюда '" << item2.GetName() << "'" << std::endl;
+	}
+	else if (item1 > item2)  // Использование оператора >
+	{
+		std::cout << "Блюдо '" << item1.GetName() << "' дороже блюда '" << item2.GetName() << "'" << std::endl;
+	}
+	
 	// Память автоматически освобождается
 	std::cout << "Динамический массив будет автоматически удален (смарт-указатели)" << std::endl;
 	std::cout << std::endl;
@@ -164,8 +191,25 @@ int main()
 		employeesArray[0]->SetHoursWorked(160.0);
 		std::cout << "Отработанные часы первого сотрудника: " 
 				  << employeesArray[0]->GetHoursWorked() << std::endl;
+		// Демонстрация перегрузки оператора += для Employee
+		*employeesArray[0] += 8.0;  // Использование оператора += для добавления часов
+		std::cout << "Отработанные часы после оператора += 8.0: " 
+				  << employeesArray[0]->GetHoursWorked() << std::endl;
 		std::cout << "Зарплата первого сотрудника: " 
 				  << employeesArray[0]->CalculateSalary() << " руб." << std::endl;
+		
+		// Демонстрация перегрузки оператора == для Employee
+		if (employeesArray[0] != nullptr && employeesArray[1] != nullptr)
+		{
+			if (*employeesArray[0] == *employeesArray[1])
+			{
+				std::cout << "Сотрудники имеют одинаковый логин" << std::endl;
+			}
+			else
+			{
+				std::cout << "Сотрудники имеют разные логины" << std::endl;
+			}
+		}
 	}
 	
 	// Память автоматически освобождается

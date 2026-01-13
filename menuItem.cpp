@@ -115,6 +115,26 @@ void MenuItem::SetSalesCount(int salesCount)
 	m_salesCount = salesCount;
 }
 
+// Реализация перегруженных операторов для MenuItem
+MenuItem& MenuItem::operator+=(int salesCount)
+{
+	if (salesCount > 0)
+	{
+		m_salesCount += salesCount;
+	}
+	return *this;
+}
+
+bool MenuItem::operator<(const MenuItem& other) const
+{
+	return m_sellingPrice < other.m_sellingPrice;
+}
+
+bool MenuItem::operator>(const MenuItem& other) const
+{
+	return m_sellingPrice > other.m_sellingPrice;
+}
+
 // Реализация дружественной функции: расчет общей стоимости меню
 double CalculateTotalMenuCost(const std::vector<MenuItem>& menuItems)
 {

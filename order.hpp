@@ -47,6 +47,9 @@ public:
 
 	// Сеттеры
 	void SetEmployee(std::shared_ptr<Employee> employee);
+
+	// Перегрузка операторов
+	Order& operator+=(std::shared_ptr<MenuItem> menuItem);	// Оператор += для добавления блюда в заказ
 };
 
 #endif // ORDER_HPP

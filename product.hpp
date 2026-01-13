@@ -44,6 +44,10 @@ public:
 	void SetExpiryDate(std::time_t expiryDate);
 	void SetReceiptDate(std::time_t receiptDate);
 
+	// Перегрузка операторов
+	Product& operator+=(double quantity);		// Оператор += для добавления веса продукта
+	bool operator==(const Product& other) const;	// Оператор == для сравнения продуктов по имени
+
 	// Дружественная функция для сравнения продуктов по цене закупки
 	friend bool CompareProductsByPrice(const Product& p1, const Product& p2);
 };

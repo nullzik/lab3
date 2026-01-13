@@ -45,6 +45,11 @@ public:
 	void SetTechCard(const TechCardType& techCard);
 	void SetSalesCount(int salesCount);
 
+	// Перегрузка операторов
+	MenuItem& operator+=(int salesCount);			// Оператор += для добавления продаж
+	bool operator<(const MenuItem& other) const;		// Оператор < для сравнения по цене продажи
+	bool operator>(const MenuItem& other) const;		// Оператор > для сравнения по цене продажи
+
 	// Дружественная функция для расчета общей стоимости меню
 	friend double CalculateTotalMenuCost(const std::vector<MenuItem>& menuItems);
 };

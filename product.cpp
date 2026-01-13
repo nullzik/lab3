@@ -151,6 +151,21 @@ void Product::SetReceiptDate(std::time_t receiptDate)
 	m_receiptDate = receiptDate;
 }
 
+// Реализация перегруженных операторов для Product
+Product& Product::operator+=(double quantity)
+{
+	if (quantity > 0.0)
+	{
+		m_weight += quantity;
+	}
+	return *this;
+}
+
+bool Product::operator==(const Product& other) const
+{
+	return m_name == other.m_name;
+}
+
 // Реализация дружественной функции: сравнение продуктов по цене закупки
 bool CompareProductsByPrice(const Product& p1, const Product& p2)
 {

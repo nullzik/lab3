@@ -179,3 +179,18 @@ void Employee::SetSalaryBalance(double salaryBalance)
 	m_salaryBalance = salaryBalance;
 }
 
+// Реализация перегруженных операторов для Employee
+Employee& Employee::operator+=(double hours)
+{
+	if (hours > 0.0)
+	{
+		m_hoursWorked += hours;
+	}
+	return *this;
+}
+
+bool Employee::operator==(const Employee& other) const
+{
+	return m_login == other.m_login;
+}
+
