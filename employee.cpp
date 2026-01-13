@@ -33,6 +33,22 @@ Employee::Employee(const std::string& fullName, int age, const std::string& cont
 {
 }
 
+// Конструктор копирования
+Employee::Employee(const Employee& other)
+	: m_fullName(other.m_fullName)
+	, m_age(other.m_age)
+	, m_contactNumber(other.m_contactNumber)
+	, m_address(other.m_address)
+	, m_position(other.m_position)
+	, m_hoursWorked(other.m_hoursWorked)
+	, m_hourlyRate(other.m_hourlyRate)
+	, m_login(other.m_login)
+	, m_password(other.m_password)
+	, m_salaryBalance(other.m_salaryBalance)
+	, m_salesCount(other.m_salesCount)
+{
+}
+
 double Employee::CalculateSalary() const
 {
 	// Расчет з/п = отработанные часы * почасовая ставка + баланс (премии/штрафы)

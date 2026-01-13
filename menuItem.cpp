@@ -22,6 +22,17 @@ MenuItem::MenuItem(const std::string& name, double costPrice, double sellingPric
 {
 }
 
+// Конструктор копирования
+MenuItem::MenuItem(const MenuItem& other)
+	: m_name(other.m_name)
+	, m_costPrice(other.m_costPrice)
+	, m_sellingPrice(other.m_sellingPrice)
+	, m_techCard(other.m_techCard)
+	, m_salesCount(other.m_salesCount)
+	, m_isAvailable(other.m_isAvailable)
+{
+}
+
 double MenuItem::CalculateProfitPerUnit() const
 {
 	return m_sellingPrice - m_costPrice;

@@ -24,6 +24,7 @@ public:
 	Employee(const std::string& fullName, int age, const std::string& contactNumber,
 			 const std::string& address, const std::string& position,
 			 double hourlyRate, const std::string& login, const std::string& password);
+	Employee(const Employee& other);		// Конструктор копирования
 	~Employee() = default;
 
 	// Публичные методы

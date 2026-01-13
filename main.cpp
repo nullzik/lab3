@@ -267,6 +267,14 @@ int main()
 	order1.AddMenuItem(pasta);
 	order1.PrintOrder();
 	
+	// Демонстрация конструктора копирования для Order
+	Order orderCopy(order1);
+	std::cout << "\n--- Демонстрация конструктора копирования для Order ---" << std::endl;
+	std::cout << "Создана копия заказа: ID оригинала = " << order1.GetOrderId() 
+			  << ", ID копии = " << orderCopy.GetOrderId() << std::endl;
+	std::cout << "Количество блюд в оригинале: " << order1.GetMenuItemsCount() 
+			  << ", в копии: " << orderCopy.GetMenuItemsCount() << std::endl;
+	
 	// Завершаем заказ (обновляются счетчики продаж)
 	order1.CompleteOrder();
 	

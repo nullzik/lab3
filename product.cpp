@@ -26,6 +26,17 @@ Product::Product(const std::string& name, double weight, const std::string& supp
 {
 }
 
+// Конструктор копирования
+Product::Product(const Product& other)
+	: m_name(other.m_name)
+	, m_weight(other.m_weight)
+	, m_supplier(other.m_supplier)
+	, m_purchasePrice(other.m_purchasePrice)
+	, m_expiryDate(other.m_expiryDate)
+	, m_receiptDate(other.m_receiptDate)
+{
+}
+
 void Product::AddProduct(double quantity)
 {
 	if (quantity > 0.0)

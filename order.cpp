@@ -26,6 +26,16 @@ Order::Order(std::shared_ptr<Employee> employee)
 {
 }
 
+// Конструктор копирования
+Order::Order(const Order& other)
+	: m_orderId(s_nextOrderId++)  // Новый уникальный ID для копии
+	, m_menuItems(other.m_menuItems)  // Копируем shared_ptr (они разделяют владение)
+	, m_totalAmount(other.m_totalAmount)
+	, m_orderTime(other.m_orderTime)
+	, m_employee(other.m_employee)  // Копируем shared_ptr
+{
+}
+
 bool Order::AddMenuItem(std::shared_ptr<MenuItem> menuItem)
 {
 	if (menuItem != nullptr)

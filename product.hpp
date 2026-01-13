@@ -19,6 +19,7 @@ public:
 	Product();
 	Product(const std::string& name, double weight, const std::string& supplier, 
 			double purchasePrice, std::time_t expiryDate, std::time_t receiptDate);
+	Product(const Product& other);		// Конструктор копирования
 	~Product() = default;
 
 	// Публичные методы

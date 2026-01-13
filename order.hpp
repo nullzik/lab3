@@ -26,6 +26,7 @@ public:
 	// Конструкторы и деструктор
 	Order();
 	Order(std::shared_ptr<Employee> employee);
+	Order(const Order& other);		// Конструктор копирования
 	~Order() = default;
 
 	// Публичные методы
