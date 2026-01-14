@@ -30,8 +30,8 @@ public:
 	void ServeOrder(std::shared_ptr<Order> order);	// Отметить обслуживание заказа
 	void AddTips(double amount);					// Добавить чаевые
 
-	// Перегрузка метода расчета зарплаты (использует protected‑поля и вызывает базовый метод)
-	double CalculateSalary() const;	// с вызовом Employee::CalculateSalary()
+	// Переопределение виртуальной функции из базового класса
+	double CalculateSalary() const override;	// Переопределение виртуальной функции Employee::CalculateSalary()
 
 	// Геттеры
 	int GetTablesServed() const;

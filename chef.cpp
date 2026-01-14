@@ -203,3 +203,15 @@ void Chef::StartShift()
 	std::cout << "Смена начата шеф-поваром: " << GetFullName() << std::endl;
 }
 
+double Chef::CalculateSalary() const
+{
+	// Переопределение виртуальной функции: используем базовый расчет + бонус шеф-повара
+	double baseSalary = Employee::CalculateSalary();  // Вызов базовой реализации
+	double chefBonus = m_salesCount * 50.0;  // Бонус за продажи (50 руб. за каждую продажу)
+	
+	std::cout << "[Chef] Расчет зарплаты: базовая = " << baseSalary
+			  << ", бонус шеф-повара = " << chefBonus << std::endl;
+	
+	return baseSalary + chefBonus;
+}
+

@@ -45,6 +45,9 @@ public:
 	
 	// Метод для начала смены (обновляет время начала смены)
 	void StartShift();
+	
+	// Переопределение виртуальной функции из базового класса
+	double CalculateSalary() const override;	// Переопределение виртуальной функции Employee::CalculateSalary()
 };
 
 #endif // CHEF_HPP

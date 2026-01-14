@@ -50,6 +50,9 @@ public:
 
 	// Методы управления складом
 	void ManageInventory(std::shared_ptr<Inventory> inventory);					// Управление складом (вызов отчета)
+	
+	// Переопределение виртуальной функции из базового класса
+	double CalculateSalary() const override;	// Переопределение виртуальной функции Employee::CalculateSalary()
 };
 
 #endif // MANAGER_HPP

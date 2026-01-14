@@ -69,6 +69,15 @@ double Employee::CalculateSalary() const
 	return m_hoursWorked * m_hourlyRate + m_salaryBalance;
 }
 
+void Employee::PrintSalaryInfo() const
+{
+	// Невиртуальная функция вызывает виртуальную функцию CalculateSalary()
+	// Благодаря виртуальности, будет вызвана правильная версия для производного класса
+	double salary = CalculateSalary();  // Вызов виртуальной функции
+	std::cout << "Сотрудник: " << m_fullName 
+			  << " (" << m_position << ") - Зарплата: " << salary << " руб." << std::endl;
+}
+
 void Employee::AddSales(int salesCount)
 {
 	if (salesCount > 0)

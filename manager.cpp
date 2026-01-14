@@ -204,3 +204,18 @@ void Manager::ViewOrdersReport(const OrdersType& orders) const
 	std::cout << "=========================" << std::endl;
 }
 
+double Manager::CalculateSalary() const
+{
+	// Переопределение виртуальной функции: менеджер получает надбавку 20% от базовой зарплаты
+	// Используем protected-поля напрямую (без вызова базового метода)
+	double base = m_hoursWorked * m_hourlyRate;
+	double managementBonus = base * 0.2;  // 20% надбавка менеджера
+	double total = base + managementBonus + m_salaryBalance;
+	
+	std::cout << "[Manager] Расчет зарплаты: базовая = " << base
+			  << ", надбавка менеджера = " << managementBonus
+			  << ", баланс = " << m_salaryBalance << std::endl;
+	
+	return total;
+}
+

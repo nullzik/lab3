@@ -434,6 +434,90 @@ int main()
 	// Отчет о списаниях
 	chefPtr->PrintShiftWriteOffsReport();
 	
+	// ============================================================
+	// 8. ДЕМОНСТРАЦИЯ ВИРТУАЛЬНЫХ ФУНКЦИЙ И ПОЛИМОРФИЗМА
+	// ============================================================
+	std::cout << "\n--- 8. Демонстрация виртуальных функций и полиморфизма ---" << std::endl;
+	
+	// Подготовка данных для демонстрации
+	waiter->SetHoursWorked(160.0);
+	waiter->SetHourlyRate(400.0);
+	waiter->SetSalaryBalance(2000.0);
+	waiter->AddSales(15);
+	
+	cashier->SetHoursWorked(160.0);
+	cashier->SetHourlyRate(500.0);
+	cashier->SetSalaryBalance(1500.0);
+	cashier->ProcessPayment(order1PtrForCashier);  // Увеличим выручку кассира
+	
+	chefPtr->SetHoursWorked(160.0);
+	chefPtr->SetHourlyRate(900.0);
+	chefPtr->SetSalaryBalance(3000.0);
+	chefPtr->AddSales(10);
+	
+	manager.SetHoursWorked(160.0);
+	manager.SetHourlyRate(1200.0);
+	manager.SetSalaryBalance(5000.0);
+	
+	// Демонстрация 1: Вызов виртуальной функции через невиртуальную функцию базового класса
+	std::cout << "\n--- Демонстрация 1: Вызов виртуальной функции через невиртуальную функцию ---" << std::endl;
+	std::cout << "Метод PrintSalaryInfo() (невиртуальный) вызывает виртуальный CalculateSalary():" << std::endl;
+	std::cout << std::endl;
+	
+	waiter->PrintSalaryInfo();   // Вызовет Waiter::CalculateSalary()
+	cashier->PrintSalaryInfo();  // Вызовет Cashier::CalculateSalary()
+	chefPtr->PrintSalaryInfo();  // Вызовет Chef::CalculateSalary()
+	manager.PrintSalaryInfo();   // Вызовет Manager::CalculateSalary()
+	
+	// Демонстрация 2: Вызов виртуальной функции через указатель базового класса (полиморфизм)
+	std::cout << "\n--- Демонстрация 2: Полиморфизм через указатель базового класса ---" << std::endl;
+	std::cout << "Создаем указатели Employee* на объекты разных производных классов:" << std::endl;
+	std::cout << std::endl;
+	
+	Employee* empPtr1 = waiter.get();   // Указатель на Waiter
+	Employee* empPtr2 = cashier.get();  // Указатель на Cashier
+	Employee* empPtr3 = chefPtr.get();  // Указатель на Chef
+	Employee* empPtr4 = &manager;        // Указатель на Manager
+	
+	std::cout << "Вызов CalculateSalary() через указатель Employee*:" << std::endl;
+	std::cout << "empPtr1 (Waiter):   " << empPtr1->CalculateSalary() << " руб." << std::endl;
+	std::cout << "empPtr2 (Cashier): " << empPtr2->CalculateSalary() << " руб." << std::endl;
+	std::cout << "empPtr3 (Chef):    " << empPtr3->CalculateSalary() << " руб." << std::endl;
+	std::cout << "empPtr4 (Manager): " << empPtr4->CalculateSalary() << " руб." << std::endl;
+	std::cout << std::endl;
+	std::cout << "Благодаря виртуальности, вызывается правильная версия для каждого типа!" << std::endl;
+	
+	// Демонстрация 3: Что было бы, если функция НЕ виртуальная
+	std::cout << "\n--- Демонстрация 3: Разница с невиртуальной функцией ---" << std::endl;
+	std::cout << "Если бы CalculateSalary() НЕ была виртуальной, то через указатель Employee*" << std::endl;
+	std::cout << "всегда вызывалась бы базовая версия Employee::CalculateSalary():" << std::endl;
+	std::cout << std::endl;
+	
+	// Показываем базовый расчет для сравнения
+	std::cout << "Базовый расчет Employee::CalculateSalary() (если бы не было virtual):" << std::endl;
+	std::cout << "empPtr1 (Waiter):   " << empPtr1->Employee::CalculateSalary() << " руб. (базовая версия)" << std::endl;
+	std::cout << "empPtr2 (Cashier): " << empPtr2->Employee::CalculateSalary() << " руб. (базовая версия)" << std::endl;
+	std::cout << "empPtr3 (Chef):    " << empPtr3->Employee::CalculateSalary() << " руб. (базовая версия)" << std::endl;
+	std::cout << "empPtr4 (Manager): " << empPtr4->Employee::CalculateSalary() << " руб. (базовая версия)" << std::endl;
+	std::cout << std::endl;
+	std::cout << "Как видно, все получают одинаковый базовый расчет, без учета специфики должности!" << std::endl;
+	std::cout << "Виртуальные функции решают эту проблему - вызывается правильная версия." << std::endl;
+	
+	// Демонстрация 4: Массив указателей на базовый класс (типичный случай использования полиморфизма)
+	std::cout << "\n--- Демонстрация 4: Массив указателей на базовый класс ---" << std::endl;
+	std::vector<Employee*> employees = {empPtr1, empPtr2, empPtr3, empPtr4};
+	
+	std::cout << "Обработка массива сотрудников через указатели Employee*:" << std::endl;
+	double totalSalary = 0.0;
+	for (size_t i = 0; i < employees.size(); ++i)
+	{
+		double salary = employees[i]->CalculateSalary();  // Виртуальный вызов
+		totalSalary += salary;
+		std::cout << "  Сотрудник #" << (i + 1) << ": " << salary << " руб." << std::endl;
+	}
+	std::cout << "Общая сумма зарплат: " << totalSalary << " руб." << std::endl;
+	std::cout << "Каждый сотрудник получает зарплату по своей формуле благодаря виртуальным функциям!" << std::endl;
+	
 	// Память автоматически освобождается смарт-указателями
 	
 	std::cout << "\n=== Демонстрация завершена ===" << std::endl;

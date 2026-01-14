@@ -35,11 +35,14 @@ public:
 	~Employee();
 
 	// Публичные методы
-	double CalculateSalary() const;					// Расчет заработной платы
+	virtual double CalculateSalary() const;			// Виртуальная функция: расчет заработной платы
 	void AddSales(int salesCount);					// Добавить продажи
 	bool OpenShift(const std::string& login, const std::string& password);	// Открыть смену (проверка логина/пароля)
 	bool ChangeCredentials(const std::string& oldLogin, const std::string& oldPassword,
 						   const std::string& newLogin, const std::string& newPassword);	// Сменить логин/пароль
+	
+	// Невиртуальная функция, которая вызывает виртуальную функцию (демонстрация)
+	void PrintSalaryInfo() const;					// Выводит информацию о зарплате, вызывая виртуальный CalculateSalary()
 
 	// Геттеры
 	std::string GetFullName() const;

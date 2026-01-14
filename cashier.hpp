@@ -24,8 +24,8 @@ public:
 	// Проведение оплаты заказа
 	void ProcessPayment(std::shared_ptr<Order> order);
 
-	// Перегрузка метода расчета зарплаты без вызова базового метода
-	double CalculateSalary() const; // использует protected‑поля напрямую
+	// Переопределение виртуальной функции из базового класса
+	double CalculateSalary() const override;	// Переопределение виртуальной функции Employee::CalculateSalary()
 
 	// Геттер
 	double GetCashRegisterTotal() const;
