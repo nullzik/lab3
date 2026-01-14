@@ -2,7 +2,10 @@ import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Chef extends Employee {
+// Класс шеф-повара, наследуется от Employee и реализует множественное наследование
+// Наследуется от Employee и реализует интерфейсы IReportGenerator и ICloneable
+// Также использует AbstractReportGenerator через композицию для демонстрации абстрактного класса
+public class Chef extends Employee implements IReportGenerator, ICloneable<Chef> {
     // Класс для хранения информации о списании (продукт и количество)
     public static class WriteOff {
         public Product product;
@@ -22,25 +25,53 @@ public class Chef extends Employee {
     // Приватные поля
     private WriteOffsType writeOffs;      // История списаний продуктов
     private long shiftStartTime;          // Время начала текущей смены (в миллисекундах)
-
+    
+    // Композиция: используем AbstractReportGenerator для демонстрации абстрактного класса
+    private AbstractReportGenerator reportGenerator;
+    
     // Конструктор по умолчанию
     public Chef() {
-        super();
+        super();  // Вызов конструктора базового класса Employee
         this.writeOffs = new WriteOffsType();
         this.shiftStartTime = 0;
         // Устанавливаем должность шеф-повара
         setPosition("Шеф-повар");
+        // Создаем объект абстрактного класса через анонимный класс
+        this.reportGenerator = new AbstractReportGenerator("Шеф-повар") {
+            @Override
+            public String generateReport() {
+                return Chef.this.generateReport();
+            }
+            
+            @Override
+            public String getReportType() {
+                return Chef.this.getReportType();
+            }
+        };
     }
 
-    // Конструктор с параметрами
+    // Конструктор с параметрами - демонстрация вызова конструктора базового класса
     public Chef(String fullName, int age, String contactNumber,
                 String address, double hourlyRate,
                 String login, String password) {
+        // Вызов конструктора базового класса Employee с параметрами
         super(fullName, age, contactNumber, address, "Шеф-повар", hourlyRate, login, password);
         this.writeOffs = new WriteOffsType();
         this.shiftStartTime = 0;
+        // Создаем объект абстрактного класса через анонимный класс
+        this.reportGenerator = new AbstractReportGenerator("Шеф-повар") {
+            @Override
+            public String generateReport() {
+                return Chef.this.generateReport();
+            }
+            
+            @Override
+            public String getReportType() {
+                return Chef.this.getReportType();
+            }
+        };
     }
-
+    
     // Добавить продукт на склад
     public void addProduct(Inventory inventory, Product product) {
         if (inventory != null) {
@@ -187,6 +218,96 @@ public class Chef extends Employee {
     public void startShift() {
         shiftStartTime = System.currentTimeMillis();
         System.out.println("Смена начата шеф-поваром: " + getFullName());
+    }
+    
+    // Переопределение метода расчета зарплаты (с вызовом базового метода)
+    @Override
+    public double calculateSalary() {
+        // Используем protected-поля из базового класса напрямую
+        // Вызываем базовый метод для расчета базовой части
+        double baseSalary = super.calculateSalary();  // Вызов базового метода Employee
+        double chefBonus = salesCount * 50.0;  // Бонус за продажи (используем protected поле)
+        
+        System.out.println("[Chef] Расчет зарплаты: базовая = " + baseSalary
+                + ", бонус шеф-повара = " + chefBonus);
+        
+        return baseSalary + chefBonus;
+    }
+    
+    // Реализация методов интерфейса IReportGenerator
+    @Override
+    public String generateReport() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Отчет шеф-повара: ").append(fullName).append("\n");  // Используем protected поле
+        sb.append("Должность: ").append(position).append("\n");
+        sb.append("Отработано часов: ").append(hoursWorked).append("\n");
+        sb.append("Почасовая ставка: ").append(hourlyRate).append(" руб./час\n");
+        sb.append("Зарплата: ").append(calculateSalary()).append(" руб.\n");
+        sb.append("Количество списаний продуктов: ").append(writeOffs.size()).append("\n");
+        sb.append("Количество продаж: ").append(salesCount);
+        return sb.toString();
+    }
+    
+    @Override
+    public String getReportType() {
+        return "Отчет шеф-повара";
+    }
+    
+    // Реализация методов интерфейса ICloneable
+    @Override
+    public Chef cloneShallow() {
+        // Поверхностное клонирование: создаем новый объект, но ссылки на продукты остаются те же
+        Chef cloned = new Chef();
+        // Копируем поля Employee через конструктор копирования
+        cloned.fullName = this.fullName;
+        cloned.age = this.age;
+        cloned.contactNumber = this.contactNumber;
+        cloned.address = this.address;
+        cloned.position = this.position;
+        cloned.hoursWorked = this.hoursWorked;
+        cloned.hourlyRate = this.hourlyRate;
+        cloned.salaryBalance = this.salaryBalance;
+        cloned.salesCount = this.salesCount;
+        cloned.writeOffs = this.writeOffs;  // Разделяем ссылку на список списаний (shallow)
+        cloned.shiftStartTime = this.shiftStartTime;
+        return cloned;
+    }
+    
+    @Override
+    public Chef cloneDeep() {
+        // Глубокое клонирование: создаем полностью независимую копию
+        Chef cloned = new Chef();
+        // Копируем поля Employee
+        cloned.fullName = this.fullName;
+        cloned.age = this.age;
+        cloned.contactNumber = this.contactNumber;
+        cloned.address = this.address;
+        cloned.position = this.position;
+        cloned.hoursWorked = this.hoursWorked;
+        cloned.hourlyRate = this.hourlyRate;
+        cloned.salaryBalance = this.salaryBalance;
+        cloned.salesCount = this.salesCount;
+        cloned.writeOffs = new WriteOffsType();
+        // Копируем каждое списание отдельно
+        for (WriteOff writeOff : this.writeOffs) {
+            // Создаем новый объект Product для глубокого клонирования
+            Product clonedProduct = new Product(
+                writeOff.product.getName(),
+                writeOff.product.getWeight(),
+                writeOff.product.getSupplier(),
+                writeOff.product.getPurchasePrice(),
+                writeOff.product.getExpiryDate(),
+                writeOff.product.getReceiptDate()
+            );
+            cloned.writeOffs.add(new WriteOff(clonedProduct, writeOff.quantity));
+        }
+        cloned.shiftStartTime = this.shiftStartTime;
+        return cloned;
+    }
+    
+    // Метод для демонстрации использования абстрактного класса
+    public void printReportUsingAbstractClass() {
+        reportGenerator.printReport();
     }
 }
 

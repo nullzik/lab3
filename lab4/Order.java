@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Order {
+// Класс Order реализует интерфейс ICloneable для демонстрации клонирования
+public class Order implements ICloneable<Order> {
     // Тип для списка позиций меню
     public static class MenuItemsType extends ArrayList<MenuItem> {
         // Наследуемся от ArrayList для удобства работы
@@ -164,6 +165,46 @@ public class Order {
     // Сеттеры
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+    
+    // Реализация методов интерфейса ICloneable
+    @Override
+    public Order cloneShallow() {
+        // Поверхностное клонирование: создаем новый Order, но ссылки на MenuItem остаются те же
+        Order cloned = new Order();
+        cloned.orderId = nextOrderId++;  // Новый ID для клона (используем статическое поле)
+        cloned.orderTime = this.orderTime;
+        cloned.employee = this.employee;  // Та же ссылка на сотрудника
+        cloned.menuItems = this.menuItems;  // Та же ссылка на список (shallow copy)
+        cloned.calculateTotalAmount();  // Пересчитываем сумму
+        return cloned;
+    }
+    
+    @Override
+    public Order cloneDeep() {
+        // Глубокое клонирование: создаем новые объекты MenuItem для каждого блюда
+        Order cloned = new Order();
+        cloned.orderId = nextOrderId++;  // Новый ID для клона (используем статическое поле)
+        cloned.orderTime = this.orderTime;
+        cloned.employee = this.employee;  // Сотрудник остается тем же (можно было бы клонировать, но оставим как есть)
+        
+        // Глубокое копирование MenuItem - создаем новые объекты
+        cloned.menuItems = new MenuItemsType();
+        for (MenuItem item : this.menuItems) {
+            if (item != null) {
+                // Создаем новый MenuItem с теми же параметрами
+                MenuItem clonedItem = new MenuItem(
+                    item.getName(),
+                    item.getCostPrice(),
+                    item.getSellingPrice(),
+                    item.isAvailable()
+                );
+                clonedItem.setSalesCount(item.getSalesCount());  // Копируем счетчик продаж
+                cloned.menuItems.add(clonedItem);
+            }
+        }
+        cloned.calculateTotalAmount();  // Пересчитываем сумму для глубокой копии
+        return cloned;
     }
 }
 

@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 
-public class Manager extends Employee {
+// Класс менеджера, наследуется от Employee и реализует множественное наследование
+// Наследуется от Employee и реализует интерфейсы IReportGenerator и ICloneable
+// Также использует AbstractReportGenerator через композицию для демонстрации абстрактного класса
+public class Manager extends Employee implements IReportGenerator, ICloneable<Manager> {
     // Тип для списка сотрудников
     public static class EmployeesType extends ArrayList<Employee> {
         // Наследуемся от ArrayList для удобства работы
@@ -16,18 +19,46 @@ public class Manager extends Employee {
         // Наследуемся от ArrayList для удобства работы
     }
 
+    // Композиция: используем AbstractReportGenerator для демонстрации абстрактного класса
+    private AbstractReportGenerator reportGenerator;
+    
     // Конструктор по умолчанию
     public Manager() {
-        super();
+        super();  // Вызов конструктора базового класса Employee
         // Устанавливаем должность менеджера
         setPosition("Менеджер");
+        // Создаем объект абстрактного класса через анонимный класс
+        this.reportGenerator = new AbstractReportGenerator("Менеджер") {
+            @Override
+            public String generateReport() {
+                return Manager.this.generateReport();
+            }
+            
+            @Override
+            public String getReportType() {
+                return Manager.this.getReportType();
+            }
+        };
     }
 
-    // Конструктор с параметрами
+    // Конструктор с параметрами - демонстрация вызова конструктора базового класса
     public Manager(String fullName, int age, String contactNumber,
                   String address, double hourlyRate,
                   String login, String password) {
+        // Вызов конструктора базового класса Employee с параметрами
         super(fullName, age, contactNumber, address, "Менеджер", hourlyRate, login, password);
+        // Создаем объект абстрактного класса через анонимный класс
+        this.reportGenerator = new AbstractReportGenerator("Менеджер") {
+            @Override
+            public String generateReport() {
+                return Manager.this.generateReport();
+            }
+            
+            @Override
+            public String getReportType() {
+                return Manager.this.getReportType();
+            }
+        };
     }
 
     // Добавить штраф сотруднику
@@ -191,6 +222,86 @@ public class Manager extends Employee {
             System.out.println();
             inventory.printExpiryDates();
         }
+    }
+    
+    // Переопределение метода расчета зарплаты (без вызова базового метода)
+    @Override
+    public double calculateSalary() {
+        // Переопределение без вызова super.calculateSalary()
+        // Используем protected-поля из базового класса напрямую
+        double base = hoursWorked * hourlyRate;
+        double managementBonus = base * 0.2;  // 20% надбавка менеджера
+        double total = base + managementBonus + salaryBalance;
+        
+        System.out.println("[Manager] Расчет зарплаты: базовая = " + base
+                + ", надбавка менеджера = " + managementBonus
+                + ", баланс = " + salaryBalance);
+        
+        return total;
+    }
+    
+    // Реализация методов интерфейса IReportGenerator
+    @Override
+    public String generateReport() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Отчет менеджера: ").append(getFullName()).append("\n");
+        sb.append("Должность: ").append(getPosition()).append("\n");
+        sb.append("Отработано часов: ").append(getHoursWorked()).append("\n");
+        sb.append("Почасовая ставка: ").append(getHourlyRate()).append(" руб./час\n");
+        sb.append("Зарплата: ").append(calculateSalary()).append(" руб.\n");
+        sb.append("Количество продаж: ").append(getSalesCount());
+        return sb.toString();
+    }
+    
+    @Override
+    public String getReportType() {
+        return "Отчет менеджера";
+    }
+    
+    // Реализация методов интерфейса ICloneable
+    @Override
+    public Manager cloneShallow() {
+        // Поверхностное клонирование
+        Manager cloned = new Manager();
+        // Копируем protected-поля из базового класса
+        cloned.fullName = this.fullName;
+        cloned.age = this.age;
+        cloned.contactNumber = this.contactNumber;
+        cloned.address = this.address;
+        cloned.position = this.position;
+        cloned.hoursWorked = this.hoursWorked;
+        cloned.hourlyRate = this.hourlyRate;
+        cloned.salaryBalance = this.salaryBalance;
+        cloned.salesCount = this.salesCount;
+        return cloned;
+    }
+    
+    @Override
+    public Manager cloneDeep() {
+        // Глубокое клонирование (для Manager совпадает с shallow, так как нет сложных объектов)
+        return cloneShallow();
+    }
+    
+    // Метод для демонстрации использования абстрактного класса
+    public void printReportUsingAbstractClass() {
+        reportGenerator.printReport();
+    }
+    
+    // Метод для присваивания объекта базового класса (аналог перегрузки оператора присваивания)
+    public Manager assignFromEmployee(Employee other) {
+        if (other != null) {
+            // Копируем доступные поля из базового класса
+            this.fullName = other.getFullName();
+            this.age = other.getAge();
+            this.contactNumber = other.getContactNumber();
+            this.address = other.getAddress();
+            this.position = other.getPosition();
+            this.hoursWorked = other.getHoursWorked();
+            this.hourlyRate = other.getHourlyRate();
+            this.salaryBalance = other.getSalaryBalance();
+            this.salesCount = other.getSalesCount();
+        }
+        return this;
     }
 }
 

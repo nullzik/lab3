@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
 
-public class Main {
+public class main {
     public static void main(String[] args) {
         System.out.println("=== Демонстрация работы классов ресторанной системы ===\n");
 
@@ -179,6 +179,11 @@ public class Main {
             System.out.println("Поймано исключение IllegalArgumentException: " + ex.getMessage());
         }
 
+        // Создаем шеф-повара и работаем со складом
+        Chef chefPtr = new Chef("Шеф Тестовый", 38, "+7-900-777-77-77",
+                               "г. Москва", 900.0,
+                               "chef_test", "chef_pass");
+        
         // Пример 2: попытка списать больше продукта, чем есть на складе
         try {
             System.out.println("Пробуем списать слишком большое количество продукта...");
@@ -191,11 +196,6 @@ public class Main {
         } catch (Exception ex) {
             System.out.println("Поймано другое исключение: " + ex.getMessage());
         }
-        
-        // Создаем шеф-повара и работаем со складом
-        Chef chefPtr = new Chef("Шеф Тестовый", 38, "+7-900-777-77-77",
-                               "г. Москва", 900.0,
-                               "chef_test", "chef_pass");
         
         // Создаем продукты и добавляем на склад
         long currentTime = System.currentTimeMillis();
@@ -247,6 +247,197 @@ public class Main {
         
         // Отчет о списаниях
         chefPtr.printShiftWriteOffsReport();
+        
+        // ============================================================
+        // 8. ДЕМОНСТРАЦИЯ ПРОИЗВОДНЫХ КЛАССОВ, PROTECTED И ПЕРЕОПРЕДЕЛЕНИЯ МЕТОДОВ
+        // ============================================================
+        System.out.println("\n--- 8. Демонстрация производных классов, protected и переопределения методов ---");
+        
+        // Создаем новые производные классы Waiter и Cashier
+        System.out.println("\n--- Создание производных классов Waiter и Cashier ---");
+        Waiter waiterDemo = new Waiter("Официант Демо", 25, "+7-900-333-33-33",
+                                       "г. Москва", 400.0, "waiter_demo", "pass");
+        Cashier cashierDemo = new Cashier("Кассир Демо", 28, "+7-900-444-44-44",
+                                          "г. Москва", 500.0, "cashier_demo", "pass");
+        
+        System.out.println("Waiter создан: " + waiterDemo.getFullName() + ", должность: " + waiterDemo.getPosition());
+        System.out.println("Cashier создан: " + cashierDemo.getFullName() + ", должность: " + cashierDemo.getPosition());
+        
+        // Демонстрация protected полей - они доступны в производных классах
+        System.out.println("\n--- Демонстрация protected полей ---");
+        System.out.println("Protected поля доступны в производных классах:");
+        waiterDemo.setHoursWorked(160.0);
+        waiterDemo.setHourlyRate(400.0);
+        System.out.println("Waiter: отработано часов = " + waiterDemo.getHoursWorked() + 
+                          ", ставка = " + waiterDemo.getHourlyRate() + " руб./час");
+        System.out.println("Эти поля объявлены как protected в Employee и доступны в Waiter и Cashier.");
+        
+        // Демонстрация переопределения методов с вызовом базового метода (Waiter)
+        System.out.println("\n--- Демонстрация переопределения метода с вызовом базового (Waiter) ---");
+        waiterDemo.addTips(500.0);
+        waiterDemo.serveOrder(order1);
+        waiterDemo.addSales(5);
+        System.out.println("Waiter.calculateSalary() вызывает super.calculateSalary() и добавляет бонусы:");
+        double waiterSalary = waiterDemo.calculateSalary();
+        System.out.println("Итоговая зарплата официанта: " + waiterSalary + " руб.");
+        
+        // Демонстрация переопределения методов без вызова базового метода (Cashier)
+        System.out.println("\n--- Демонстрация переопределения метода без вызова базового (Cashier) ---");
+        cashierDemo.setHoursWorked(160.0);
+        cashierDemo.setHourlyRate(500.0);
+        cashierDemo.processPayment(order1);
+        System.out.println("Cashier.calculateSalary() НЕ вызывает super.calculateSalary(), а рассчитывает самостоятельно:");
+        double cashierSalary = cashierDemo.calculateSalary();
+        System.out.println("Итоговая зарплата кассира: " + cashierSalary + " руб.");
+        
+        // ============================================================
+        // 9. ДЕМОНСТРАЦИЯ ВЫЗОВА КОНСТРУКТОРА БАЗОВОГО КЛАССА
+        // ============================================================
+        System.out.println("\n--- 9. Демонстрация вызова конструктора базового класса ---");
+        System.out.println("При создании производного класса с параметрами,");
+        System.out.println("конструктор производного класса ВСЕГДА вызывает конструктор базового класса.");
+        System.out.println("Это происходит через super(...) в первой строке конструктора.");
+        System.out.println("\nПримеры:");
+        System.out.println("  Waiter(...) вызывает super(fullName, age, contactNumber, address, \"Официант\", hourlyRate, login, password)");
+        System.out.println("  Cashier(...) вызывает super(fullName, age, contactNumber, address, \"Кассир\", hourlyRate, login, password)");
+        System.out.println("  Chef(...) вызывает super(fullName, age, contactNumber, address, \"Шеф-повар\", hourlyRate, login, password)");
+        System.out.println("  Manager(...) вызывает super(fullName, age, contactNumber, address, \"Менеджер\", hourlyRate, login, password)");
+        
+        // ============================================================
+        // 10. ДЕМОНСТРАЦИЯ ВИРТУАЛЬНЫХ ФУНКЦИЙ (В Java все методы виртуальные по умолчанию)
+        // ============================================================
+        System.out.println("\n--- 10. Демонстрация виртуальных функций (в Java все методы виртуальные) ---");
+        System.out.println("В Java все методы виртуальные по умолчанию. Полиморфизм работает автоматически.");
+        
+        // Массив ссылок на базовый класс Employee
+        Employee[] employees = new Employee[4];
+        employees[0] = waiterDemo;
+        employees[1] = cashierDemo;
+        employees[2] = chefPtr;
+        employees[3] = manager;
+        
+        System.out.println("\nВызов calculateSalary() через ссылки Employee*:");
+        for (int i = 0; i < employees.length; i++) {
+            System.out.println("  Сотрудник #" + (i + 1) + " (" + employees[i].getPosition() + "): " + 
+                            employees[i].calculateSalary() + " руб.");
+        }
+        System.out.println("Каждый сотрудник получает зарплату по своей формуле благодаря виртуальным методам!");
+        
+        // ============================================================
+        // 11. ДЕМОНСТРАЦИЯ КЛОНИРОВАНИЯ (SHALLOW И DEEP)
+        // ============================================================
+        System.out.println("\n--- 11. Демонстрация клонирования (shallow vs deep) ---");
+        
+        // Создаем заказ для клонирования
+        Order orderForClone = new Order(waiterDemo);
+        orderForClone.addMenuItem(pizza);
+        orderForClone.addMenuItem(pasta);
+        System.out.println("Оригинальный заказ #" + orderForClone.getOrderId() + ", сумма: " + orderForClone.getTotalAmount() + " руб.");
+        
+        // Поверхностное клонирование
+        Order orderShallow = orderForClone.cloneShallow();
+        System.out.println("Shallow-клон заказа #" + orderShallow.getOrderId() + ", сумма: " + orderShallow.getTotalAmount() + " руб.");
+        
+        // Глубокое клонирование
+        Order orderDeep = orderForClone.cloneDeep();
+        System.out.println("Deep-клон заказа #" + orderDeep.getOrderId() + ", сумма: " + orderDeep.getTotalAmount() + " руб.");
+        
+        // Изменим цену у пиццы в оригинале и посмотрим, где она поменяется
+        System.out.println("\nИзменяем цену пиццы в оригинале с " + pizza.getSellingPrice() + " на 650.0 руб.");
+        pizza.setSellingPrice(650.0);
+        orderForClone.calculateTotalAmount();
+        orderShallow.calculateTotalAmount();
+        orderDeep.calculateTotalAmount();
+        
+        System.out.println("После изменения цены пиццы в оригинале:");
+        System.out.println("  Оригинал, сумма:       " + orderForClone.getTotalAmount() + " руб.");
+        System.out.println("  Shallow-клон, сумма:   " + orderShallow.getTotalAmount() + " руб. (делит тот же MenuItem)");
+        System.out.println("  Deep-клон, сумма:      " + orderDeep.getTotalAmount() + " руб. (своя копия MenuItem)");
+        
+        // ============================================================
+        // 12. ДЕМОНСТРАЦИЯ АБСТРАКТНОГО КЛАССА
+        // ============================================================
+        System.out.println("\n--- 12. Демонстрация абстрактного класса AbstractReportGenerator ---");
+        System.out.println("Абстрактный класс AbstractReportGenerator определяет общую структуру для генерации отчетов.");
+        System.out.println("Он содержит абстрактные методы generateReport() и getReportType(),");
+        System.out.println("которые должны быть реализованы в производных классах.");
+        
+        // Используем абстрактный класс через композицию в Chef и Manager
+        System.out.println("\nИспользование абстрактного класса через композицию:");
+        chefPtr.printReportUsingAbstractClass();
+        manager.printReportUsingAbstractClass();
+        
+        // ============================================================
+        // 13. ДЕМОНСТРАЦИЯ ИНТЕРФЕЙСОВ
+        // ============================================================
+        System.out.println("\n--- 13. Демонстрация интерфейсов ---");
+        System.out.println("Интерфейсы IReportGenerator и ICloneable определяют контракты для классов.");
+        
+        // Использование интерфейса IReportGenerator
+        System.out.println("\n--- Использование интерфейса IReportGenerator ---");
+        IReportGenerator reportGen1 = chefPtr;  // Chef реализует IReportGenerator
+        IReportGenerator reportGen2 = manager;  // Manager реализует IReportGenerator
+        
+        System.out.println("Вызов методов через интерфейс IReportGenerator:");
+        System.out.println("Тип отчета 1: " + reportGen1.getReportType());
+        System.out.println("Тип отчета 2: " + reportGen2.getReportType());
+        System.out.println("\nОтчет 1:");
+        reportGen1.printReport();  // Используем default метод интерфейса
+        System.out.println("\nОтчет 2:");
+        reportGen2.printReport();
+        
+        // Использование интерфейса ICloneable
+        System.out.println("\n--- Использование интерфейса ICloneable ---");
+        ICloneable<Chef> cloneableChef = chefPtr;
+        ICloneable<Manager> cloneableManager = manager;
+        
+        System.out.println("Клонирование через интерфейс ICloneable:");
+        Chef clonedChef = cloneableChef.cloneShallow();
+        System.out.println("Shallow-клон Chef создан: " + clonedChef.getFullName());
+        
+        Manager clonedManager = cloneableManager.cloneDeep();
+        System.out.println("Deep-клон Manager создан: " + clonedManager.getFullName());
+        
+        // ============================================================
+        // 14. ДЕМОНСТРАЦИЯ МНОЖЕСТВЕННОГО НАСЛЕДОВАНИЯ
+        // ============================================================
+        System.out.println("\n--- 14. Демонстрация множественного наследования ---");
+        System.out.println("В Java класс может наследоваться только от одного класса,");
+        System.out.println("но может реализовывать несколько интерфейсов.");
+        System.out.println("\nChef наследуется от Employee и реализует:");
+        System.out.println("  - IReportGenerator (для генерации отчетов)");
+        System.out.println("  - ICloneable<Chef> (для клонирования)");
+        System.out.println("Также использует AbstractReportGenerator через композицию.");
+        System.out.println("\nManager наследуется от Employee и реализует:");
+        System.out.println("  - IReportGenerator (для генерации отчетов)");
+        System.out.println("  - ICloneable<Manager> (для клонирования)");
+        System.out.println("Также использует AbstractReportGenerator через композицию.");
+        
+        System.out.println("\nДемонстрация множественного наследования:");
+        System.out.println("Chef является Employee: " + (chefPtr instanceof Employee));
+        System.out.println("Chef реализует IReportGenerator: " + (chefPtr instanceof IReportGenerator));
+        System.out.println("Chef реализует ICloneable: " + (chefPtr instanceof ICloneable));
+        System.out.println("Manager является Employee: " + (manager instanceof Employee));
+        System.out.println("Manager реализует IReportGenerator: " + (manager instanceof IReportGenerator));
+        System.out.println("Manager реализует ICloneable: " + (manager instanceof ICloneable));
+        
+        // ============================================================
+        // 15. ДЕМОНСТРАЦИЯ ПРИСВАИВАНИЯ ОБЪЕКТА БАЗОВОГО КЛАССА ПРОИЗВОДНОМУ
+        // ============================================================
+        System.out.println("\n--- 15. Демонстрация присваивания объекта базового класса производному ---");
+        Employee baseEmployee = new Employee("Базовый Сотрудник", 30, "+7-900-111-11-11",
+                                            "г. Москва", "Сотрудник", 600.0, "base", "base123");
+        
+        System.out.println("До присваивания:");
+        System.out.println("  baseEmployee: " + baseEmployee.getFullName() + ", ставка: " + baseEmployee.getHourlyRate() + " руб./час");
+        System.out.println("  manager: " + manager.getFullName() + ", ставка: " + manager.getHourlyRate() + " руб./час");
+        
+        // Присваиваем объект базового класса объекту производного класса
+        manager.assignFromEmployee(baseEmployee);
+        
+        System.out.println("\nПосле присваивания manager.assignFromEmployee(baseEmployee):");
+        System.out.println("  manager: " + manager.getFullName() + ", ставка: " + manager.getHourlyRate() + " руб./час");
+        System.out.println("  Должность manager осталась: " + manager.getPosition() + " (специфичные для Manager данные сохраняются)");
         
         System.out.println("\n=== Демонстрация завершена ===");
     }

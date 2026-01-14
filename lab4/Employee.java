@@ -2,18 +2,20 @@ public class Employee {
     // Статическое поле: общее количество сотрудников
     private static int totalEmployees = 0;
 
-    // Приватные поля
-    private String fullName;          // ФИО
-    private int age;                  // Возраст
-    private String contactNumber;     // Контактный номер
-    private String address;           // Адрес
-    private String position;          // Должность
-    private double hoursWorked;       // Отработанные часы
-    private double hourlyRate;        // Почасовая ставка
+    // Приватные поля (недоступны наследникам)
     private String login;             // Логин
     private String password;          // Пароль
-    private double salaryBalance;     // Баланс з/п (для штрафов, премий, списаний)
-    private int salesCount;           // Количество продаж
+    
+    // Protected поля (доступны наследникам для демонстрации protected)
+    protected String fullName;          // ФИО
+    protected int age;                  // Возраст
+    protected String contactNumber;     // Контактный номер
+    protected String address;           // Адрес
+    protected String position;          // Должность
+    protected double hoursWorked;       // Отработанные часы
+    protected double hourlyRate;        // Почасовая ставка
+    protected double salaryBalance;     // Баланс з/п (для штрафов, премий, списаний)
+    protected int salesCount;           // Количество продаж
 
     // Конструктор по умолчанию
     public Employee() {
