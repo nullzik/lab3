@@ -53,23 +53,29 @@ public class Chef extends Employee {
 
     // Списать продукт (вызывается из класса Product)
     public void writeOffProduct(Product product, double quantity, String reason) {
-        if (product != null && quantity > 0.0) {
-            // Проверяем, достаточно ли продукта для списания
-            if (product.getWeight() >= quantity) {
-                product.removeProduct(quantity);
-                writeOffs.add(new WriteOff(product, quantity));
-                
-                System.out.print("Списание продукта: " + product.getName() + 
-                               " в количестве " + quantity + " кг");
-                if (reason != null && !reason.isEmpty()) {
-                    System.out.print(" (причина: " + reason + ")");
-                }
-                System.out.println();
-            } else {
-                System.out.println("Ошибка: недостаточно продукта '" + product.getName() + 
-                                 "' для списания. Доступно: " + product.getWeight() + 
-                                 " кг, требуется: " + quantity + " кг");
+        if (product == null) {
+            throw new IllegalArgumentException("Продукт не может быть null");
+        }
+        if (quantity <= 0.0) {
+            throw new IllegalArgumentException("Количество для списания должно быть положительным");
+        }
+
+        // Проверяем, достаточно ли продукта для списания
+        if (product.getWeight() >= quantity) {
+            product.removeProduct(quantity);
+            writeOffs.add(new WriteOff(product, quantity));
+            
+            System.out.print("Списание продукта: " + product.getName() + 
+                           " в количестве " + quantity + " кг");
+            if (reason != null && !reason.isEmpty()) {
+                System.out.print(" (причина: " + reason + ")");
             }
+            System.out.println();
+        } else {
+            // Демонстрация генерации исключения
+            throw new RuntimeException("Недостаточно продукта '" + product.getName() + 
+                                     "' для списания. Доступно: " + product.getWeight() + 
+                                     " кг, требуется: " + quantity + " кг");
         }
     }
 

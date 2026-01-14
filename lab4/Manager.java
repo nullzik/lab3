@@ -52,11 +52,16 @@ public class Manager extends Employee {
 
     // Изменить почасовую ставку
     public void changeHourlyRate(Employee employee, double newRate) {
-        if (employee != null && newRate >= 0.0) {
-            employee.setHourlyRate(newRate);
-            System.out.println("Почасовая ставка изменена для сотрудника: " + 
-                             employee.getFullName() + " на " + newRate + " руб./час");
+        if (employee == null) {
+            throw new IllegalArgumentException("Сотрудник не может быть null");
         }
+        if (newRate < 0.0) {
+            // Демонстрация генерации исключения
+            throw new IllegalArgumentException("Нельзя установить отрицательную почасовую ставку");
+        }
+        employee.setHourlyRate(newRate);
+        System.out.println("Почасовая ставка изменена для сотрудника: " + 
+                         employee.getFullName() + " на " + newRate + " руб./час");
     }
 
     // Изменить отработанные часы

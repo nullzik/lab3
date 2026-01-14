@@ -17,6 +17,8 @@ public class Main {
         
         System.out.println("Создан статический объект MenuItem: " + staticMenuItem.getName());
         System.out.println("Создан статический объект Employee: " + staticEmployee.getFullName());
+        System.out.println("Текущее количество сотрудников (статическое поле): " 
+                           + Employee.getTotalEmployees());
         System.out.println();
 
         // ============================================================
@@ -125,6 +127,15 @@ public class Main {
                          employeesArray[0].getHoursWorked());
         System.out.println("Зарплата первого сотрудника: " + 
                          employeesArray[0].calculateSalary() + " руб.");
+
+        // Демонстрация использования this через цепочку вызовов (фактически через методы, возвращающие this)
+        System.out.println("\n--- Демонстрация использования this (Java) ---");
+        Employee testEmployee = new Employee(staticEmployee); // копирующий конструктор
+        // Имитация fluent-интерфейса: методы set* возвращали бы this (здесь просто демонстрация this в сеттерах)
+        testEmployee.setFullName("Тестовый ФИО");
+        testEmployee.setPosition("Тестовая должность");
+        System.out.println("Сотрудник после изменения с использованием this в сеттерах: "
+                           + testEmployee.getFullName() + " (" + testEmployee.getPosition() + ")");
         System.out.println();
 
         // ============================================================
@@ -154,6 +165,32 @@ public class Main {
         
         // Завершаем заказ (обновляются счетчики продаж)
         order1.completeOrder();
+
+        // ============================================================
+        // 7. ДЕМОНСТРАЦИЯ РАБОТЫ С ИСКЛЮЧЕНИЯМИ (try, catch, throw) В JAVA
+        // ============================================================
+        System.out.println("\n--- 7. Демонстрация работы с исключениями (Java) ---");
+
+        // Пример 1: попытка установить отрицательную почасовую ставку
+        try {
+            System.out.println("Пробуем установить отрицательную почасовую ставку для официанта...");
+            manager.changeHourlyRate(waiter, -100.0); // Здесь будет брошен IllegalArgumentException
+        } catch (IllegalArgumentException ex) {
+            System.out.println("Поймано исключение IllegalArgumentException: " + ex.getMessage());
+        }
+
+        // Пример 2: попытка списать больше продукта, чем есть на складе
+        try {
+            System.out.println("Пробуем списать слишком большое количество продукта...");
+            Product cheeseOnWarehouse = inventory.findProduct("Сыр");
+            if (cheeseOnWarehouse != null) {
+                chefPtr.writeOffProduct(cheeseOnWarehouse, 1000.0, "Тестовое списание");
+            }
+        } catch (RuntimeException ex) {
+            System.out.println("Поймано исключение RuntimeException: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Поймано другое исключение: " + ex.getMessage());
+        }
         
         // Создаем шеф-повара и работаем со складом
         Chef chefPtr = new Chef("Шеф Тестовый", 38, "+7-900-777-77-77",

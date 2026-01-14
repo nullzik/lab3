@@ -1,4 +1,7 @@
 public class Employee {
+    // Статическое поле: общее количество сотрудников
+    private static int totalEmployees = 0;
+
     // Приватные поля
     private String fullName;          // ФИО
     private int age;                  // Возраст
@@ -25,6 +28,7 @@ public class Employee {
         this.password = "";
         this.salaryBalance = 0.0;
         this.salesCount = 0;
+        totalEmployees++; // Увеличиваем счетчик сотрудников
     }
 
     // Конструктор с параметрами
@@ -42,6 +46,17 @@ public class Employee {
         this.password = password;
         this.salaryBalance = 0.0;
         this.salesCount = 0;
+        totalEmployees++; // Увеличиваем счетчик сотрудников
+    }
+
+    // "Конструктор копирования" в Java (через другой конструктор)
+    public Employee(Employee other) {
+        this(other.fullName, other.age, other.contactNumber,
+             other.address, other.position,
+             other.hourlyRate, other.login, other.password);
+        this.hoursWorked = other.hoursWorked;
+        this.salaryBalance = other.salaryBalance;
+        this.salesCount = other.salesCount;
     }
 
     // Расчет заработной платы
@@ -162,6 +177,11 @@ public class Employee {
 
     public void setSalaryBalance(double salaryBalance) {
         this.salaryBalance = salaryBalance;
+    }
+
+    // Статический метод: получить общее количество сотрудников
+    public static int getTotalEmployees() {
+        return totalEmployees;
     }
 }
 
