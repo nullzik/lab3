@@ -207,3 +207,32 @@ Order& Order::operator+=(std::shared_ptr<MenuItem> menuItem)
 	return *this;  // Возврат ссылки на текущий объект
 }
 
+std::shared_ptr<Order> Order::CloneShallow() const
+{
+	// Поверхностное клонирование: используем конструктор копирования,
+	// который копирует shared_ptr (разделяем те же объекты меню и сотрудника)
+	return std::make_shared<Order>(*this);
+}
+
+std::shared_ptr<Order> Order::CloneDeep() const
+{
+	// Глубокое клонирование: создаем новый заказ с новыми объектами MenuItem
+	// (сотрудника оставляем тем же, чтобы показать разницу именно в меню)
+	auto cloned = std::make_shared<Order>();
+	cloned->m_employee = m_employee;      // сотрудник разделяется
+	cloned->m_orderTime = m_orderTime;    // копируем время
+
+	// Клонируем позиции меню (создаем новые объекты MenuItem)
+	for (const auto& item : m_menuItems)
+	{
+		if (item != nullptr)
+		{
+			cloned->m_menuItems.push_back(std::make_shared<MenuItem>(*item));
+		}
+	}
+
+	// Пересчитываем сумму
+	cloned->CalculateTotalAmount();
+	return cloned;
+}
+

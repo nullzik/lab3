@@ -287,6 +287,7 @@ int main()
 									"г. Москва", 400.0, "waiter_test", "test");
 	std::shared_ptr<Cashier> cashier = std::make_shared<Cashier>("Кассир Тестовый", 30, "+7-900-444-44-44",
 									"г. Москва", 500.0, "cashier_test", "cash");
+	std::cout << "Создан Waiter и Cashier: их конструкторы вызывают конструктор базового класса Employee с параметрами (ФИО, возраст, контакты, ставка, логин)." << std::endl;
 	
 	// Создаем заказы (используем локальный объект для демонстрации)
 	Order order1(waiter);
@@ -301,6 +302,28 @@ int main()
 			  << ", ID копии = " << orderCopy.GetOrderId() << std::endl;
 	std::cout << "Количество блюд в оригинале: " << order1.GetMenuItemsCount() 
 			  << ", в копии: " << orderCopy.GetMenuItemsCount() << std::endl;
+
+	// -----------------------------------------------------------------
+	// Демонстрация клонирования (поверхностного и глубокого)
+	// -----------------------------------------------------------------
+	std::cout << "\n--- Демонстрация клонирования заказа (shallow vs deep) ---" << std::endl;
+	auto orderShallow = order1.CloneShallow(); // копирует shared_ptr на те же блюда
+	auto orderDeep = order1.CloneDeep();       // создает новые объекты блюд
+
+	std::cout << "ID оригинала: " << order1.GetOrderId()
+			  << ", shallow-клон: " << orderShallow->GetOrderId()
+			  << ", deep-клон: " << orderDeep->GetOrderId() << std::endl;
+
+	// Изменим цену у пиццы в оригинале и посмотрим, где она поменяется
+	pizza->SetSellingPrice(650.0);
+	order1.CalculateTotalAmount();
+	orderShallow->CalculateTotalAmount();
+	orderDeep->CalculateTotalAmount();
+
+	std::cout << "После изменения цены пиццы в оригинале:" << std::endl;
+	std::cout << "  Оригинал, сумма:       " << order1.GetTotalAmount() << " руб." << std::endl;
+	std::cout << "  Shallow-клон, сумма:   " << orderShallow->GetTotalAmount() << " руб. (делит тот же MenuItem)" << std::endl;
+	std::cout << "  Deep-клон, сумма:      " << orderDeep->GetTotalAmount() << " руб. (своя копия MenuItem)" << std::endl;
 	
 	// Завершаем заказ (обновляются счетчики продаж)
 	order1.CompleteOrder();

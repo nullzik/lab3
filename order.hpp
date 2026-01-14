@@ -45,6 +45,9 @@ public:
 	std::time_t GetOrderTime() const;
 	std::shared_ptr<Employee> GetEmployee() const;
 	int GetMenuItemsCount() const;
+	// Клонирование
+	std::shared_ptr<Order> CloneShallow() const;	// Поверхностное копирование (shared_ptr разделяют объекты меню)
+	std::shared_ptr<Order> CloneDeep() const;		// Глубокое копирование (новые объекты MenuItem)
 
 	// Сеттеры
 	void SetEmployee(std::shared_ptr<Employee> employee);
