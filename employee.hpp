@@ -55,6 +55,10 @@ public:
 	void SetHoursWorked(double hoursWorked);
 	void SetHourlyRate(double hourlyRate);
 	void SetSalaryBalance(double salaryBalance);
+	
+	// Методы с использованием this для цепочки вызовов
+	Employee& SetFullNameWithThis(const std::string& fullName);	// Возвращает *this для цепочки вызовов
+	Employee& SetPositionWithThis(const std::string& position);	// Возвращает *this для цепочки вызовов
 
 	// Перегрузка операторов
 	Employee& operator+=(double hours);				// Оператор += для добавления отработанных часов

@@ -170,14 +170,14 @@ Product& Product::operator+=(double quantity)
 {
 	if (quantity > 0.0)
 	{
-		m_weight += quantity;
+		this->m_weight += quantity;  // Использование this для доступа к полю
 	}
-	return *this;
+	return *this;  // Возврат ссылки на текущий объект
 }
 
 bool Product::operator==(const Product& other) const
 {
-	return m_name == other.m_name;
+	return this->m_name == other.m_name;  // Использование this для сравнения
 }
 
 // Реализация дружественной функции: сравнение продуктов по цене закупки

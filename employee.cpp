@@ -195,18 +195,31 @@ void Employee::SetSalaryBalance(double salaryBalance)
 	m_salaryBalance = salaryBalance;
 }
 
+// Методы с использованием this для цепочки вызовов
+Employee& Employee::SetFullNameWithThis(const std::string& fullName)
+{
+	this->m_fullName = fullName;  // Использование this для доступа к полю
+	return *this;  // Возврат ссылки на текущий объект для цепочки вызовов
+}
+
+Employee& Employee::SetPositionWithThis(const std::string& position)
+{
+	this->m_position = position;  // Использование this для доступа к полю
+	return *this;  // Возврат ссылки на текущий объект для цепочки вызовов
+}
+
 // Реализация перегруженных операторов для Employee
 Employee& Employee::operator+=(double hours)
 {
 	if (hours > 0.0)
 	{
-		m_hoursWorked += hours;
+		this->m_hoursWorked += hours;  // Использование this для доступа к полю
 	}
-	return *this;
+	return *this;  // Возврат ссылки на текущий объект
 }
 
 bool Employee::operator==(const Employee& other) const
 {
-	return m_login == other.m_login;
+	return this->m_login == other.m_login;  // Использование this для сравнения
 }
 

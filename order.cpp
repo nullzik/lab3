@@ -203,7 +203,7 @@ void Order::SetEmployee(std::shared_ptr<Employee> employee)
 // Реализация перегруженного оператора для Order
 Order& Order::operator+=(std::shared_ptr<MenuItem> menuItem)
 {
-	AddMenuItem(menuItem);
-	return *this;
+	this->AddMenuItem(menuItem);  // Использование this для вызова метода
+	return *this;  // Возврат ссылки на текущий объект
 }
 

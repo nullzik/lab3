@@ -27,6 +27,17 @@ int main()
 	std::cout << "Создан статический объект MenuItem: " << staticMenuItem.GetName() << std::endl;
 	std::cout << "Создан статический объект Employee: " << staticEmployee.GetFullName() << std::endl;
 	
+	// Демонстрация использования оператора this для цепочки вызовов методов
+	std::cout << "\n--- Демонстрация использования оператора this ---" << std::endl;
+	Employee testEmployee("Тестовый Сотрудник", 25, "+7-900-000-00-00",
+						 "г. Москва", "Тестировщик", 500.0, "test", "pass");
+	// Использование цепочки вызовов благодаря возврату *this
+	testEmployee.SetFullNameWithThis("Новое Имя").SetPositionWithThis("Новая Должность");
+	std::cout << "После цепочки вызовов: " << testEmployee.GetFullName() 
+			  << " (" << testEmployee.GetPosition() << ")" << std::endl;
+	std::cout << "Методы SetFullNameWithThis и SetPositionWithThis возвращают *this, "
+			  << "что позволяет использовать цепочку вызовов" << std::endl;
+	
 	// Демонстрация работы с std::string: конкатенация и поиск
 	std::string employeeInfo = "Сотрудник: ";
 	employeeInfo += staticEmployee.GetFullName();  // Конкатенация через оператор +=
