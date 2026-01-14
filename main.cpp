@@ -26,6 +26,8 @@ int main()
 	
 	std::cout << "Создан статический объект MenuItem: " << staticMenuItem.GetName() << std::endl;
 	std::cout << "Создан статический объект Employee: " << staticEmployee.GetFullName() << std::endl;
+	std::cout << "Текущее количество сотрудников (статическое поле): " 
+			  << Employee::GetTotalEmployees() << std::endl;
 	
 	// Демонстрация использования оператора this для цепочки вызовов методов
 	std::cout << "\n--- Демонстрация использования оператора this ---" << std::endl;

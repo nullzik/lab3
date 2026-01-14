@@ -6,6 +6,7 @@
 class Employee
 {
 private:
+	static int s_totalEmployees;		// Статическое поле: общее количество сотрудников
 	std::string m_fullName;			// ФИО
 	int m_age;						// Возраст
 	std::string m_contactNumber;	// Контактный номер
@@ -25,7 +26,7 @@ public:
 			 const std::string& address, const std::string& position,
 			 double hourlyRate, const std::string& login, const std::string& password);
 	Employee(const Employee& other);		// Конструктор копирования
-	~Employee() = default;
+	~Employee();
 
 	// Публичные методы
 	double CalculateSalary() const;					// Расчет заработной платы
@@ -63,6 +64,9 @@ public:
 	// Перегрузка операторов
 	Employee& operator+=(double hours);				// Оператор += для добавления отработанных часов
 	bool operator==(const Employee& other) const;	// Оператор == для сравнения сотрудников по логину
+
+	// Статический метод
+	static int GetTotalEmployees();					// Получить общее количество созданных сотрудников
 };
 
 #endif // EMPLOYEE_HPP

@@ -1,6 +1,8 @@
 #include "employee.hpp"
 #include <iostream>
 
+int Employee::s_totalEmployees = 0;	// Инициализация статического поля
+
 Employee::Employee()
 	: m_fullName("")
 	, m_age(0)
@@ -14,6 +16,7 @@ Employee::Employee()
 	, m_salaryBalance(0.0)
 	, m_salesCount(0)
 {
+	++s_totalEmployees;	// Увеличиваем счетчик сотрудников
 }
 
 Employee::Employee(const std::string& fullName, int age, const std::string& contactNumber,
@@ -31,6 +34,7 @@ Employee::Employee(const std::string& fullName, int age, const std::string& cont
 	, m_salaryBalance(0.0)
 	, m_salesCount(0)
 {
+	++s_totalEmployees;	// Увеличиваем счетчик сотрудников
 }
 
 // Конструктор копирования
@@ -47,6 +51,16 @@ Employee::Employee(const Employee& other)
 	, m_salaryBalance(other.m_salaryBalance)
 	, m_salesCount(other.m_salesCount)
 {
+	++s_totalEmployees;	// Увеличиваем счетчик сотрудников при копировании
+}
+
+Employee::~Employee()
+{
+	// Уменьшаем счетчик при уничтожении объекта
+	if (s_totalEmployees > 0)
+	{
+		--s_totalEmployees;
+	}
 }
 
 double Employee::CalculateSalary() const
@@ -221,5 +235,10 @@ Employee& Employee::operator+=(double hours)
 bool Employee::operator==(const Employee& other) const
 {
 	return this->m_login == other.m_login;  // Использование this для сравнения
+}
+
+int Employee::GetTotalEmployees()
+{
+	return s_totalEmployees;
 }
 
