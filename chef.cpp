@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <ctime>
 #include <cstring>
+#include <stdexcept>
 
 Chef::Chef()
 	: Employee()
@@ -43,28 +44,34 @@ void Chef::AddProduct(std::shared_ptr<Inventory> inventory, const Product& produ
 
 void Chef::WriteOffProduct(std::shared_ptr<Product> product, double quantity, const std::string& reason)
 {
-	if (product != nullptr && quantity > 0.0)
+	if (!product)
 	{
-		// Проверяем, достаточно ли продукта для списания
-		if (product->GetWeight() >= quantity)
+		throw std::invalid_argument("Указатель на продукт равен nullptr");
+	}
+
+	if (quantity <= 0.0)
+	{
+		throw std::invalid_argument("Количество для списания должно быть положительным");
+	}
+
+	// Проверяем, достаточно ли продукта для списания
+	if (product->GetWeight() >= quantity)
+	{
+		product->RemoveProduct(quantity);
+		m_writeOffs.push_back({product, quantity});
+		
+		std::cout << "Списание продукта: " << product->GetName() 
+				  << " в количестве " << quantity << " кг";
+		if (!reason.empty())
 		{
-			product->RemoveProduct(quantity);
-			m_writeOffs.push_back({product, quantity});
-			
-			std::cout << "Списание продукта: " << product->GetName() 
-					  << " в количестве " << quantity << " кг";
-			if (!reason.empty())
-			{
-				std::cout << " (причина: " << reason << ")";
-			}
-			std::cout << std::endl;
+			std::cout << " (причина: " << reason << ")";
 		}
-		else
-		{
-			std::cout << "Ошибка: недостаточно продукта '" << product->GetName() 
-					  << "' для списания. Доступно: " << product->GetWeight() 
-					  << " кг, требуется: " << quantity << " кг" << std::endl;
-		}
+		std::cout << std::endl;
+	}
+	else
+	{
+		// Демонстрация генерации исключения с сообщением
+		throw std::runtime_error("Недостаточно продукта '" + product->GetName() + "' для списания");
 	}
 }
 
