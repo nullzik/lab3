@@ -1,7 +1,6 @@
 #include "manager.hpp"
 #include <iostream>
 #include <iomanip>
-#include <stdexcept>
 
 Manager::Manager()
 	: Employee()
@@ -47,20 +46,12 @@ void Manager::AddBonus(std::shared_ptr<Employee> employee, double amount)
 
 void Manager::ChangeHourlyRate(std::shared_ptr<Employee> employee, double newRate)
 {
-	if (!employee)
+	if (employee != nullptr && newRate >= 0.0)
 	{
-		throw std::invalid_argument("Указатель на сотрудника равен nullptr");
+		employee->SetHourlyRate(newRate);
+		std::cout << "Почасовая ставка изменена для сотрудника: " 
+				  << employee->GetFullName() << " на " << newRate << " руб./час" << std::endl;
 	}
-
-	if (newRate < 0.0)
-	{
-		// Демонстрация инициализации и генерации исключения
-		throw std::invalid_argument("Нельзя установить отрицательную почасовую ставку");
-	}
-
-	employee->SetHourlyRate(newRate);
-	std::cout << "Почасовая ставка изменена для сотрудника: " 
-			  << employee->GetFullName() << " на " << newRate << " руб./час" << std::endl;
 }
 
 void Manager::ChangeHoursWorked(std::shared_ptr<Employee> employee, double hours)

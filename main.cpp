@@ -6,6 +6,8 @@
 #include "manager.hpp"
 #include "chef.hpp"
 #include "order.hpp"
+#include "waiter.hpp"
+#include "cashier.hpp"
 #include <ctime>
 #include <memory>
 #include <vector>
@@ -280,10 +282,11 @@ int main()
 	std::shared_ptr<MenuItem> pizza(manager.CreateMenuItem("Пицца Пепперони", 200.0, 550.0, true));
 	std::shared_ptr<MenuItem> pasta(manager.CreateMenuItem("Лазанья", 180.0, 480.0, true));
 	
-	// Создаем сотрудника-официанта с использованием shared_ptr
-	std::shared_ptr<Employee> waiter = std::make_shared<Employee>("Официант Тестовый", 22, "+7-900-000-00-00",
-									"г. Москва", "Официант",
-									400.0, "waiter_test", "test");
+	// Создаем сотрудника-официанта и кассира как производные классы от Employee
+	std::shared_ptr<Waiter> waiter = std::make_shared<Waiter>("Официант Тестовый", 22, "+7-900-000-00-00",
+									"г. Москва", 400.0, "waiter_test", "test");
+	std::shared_ptr<Cashier> cashier = std::make_shared<Cashier>("Кассир Тестовый", 30, "+7-900-444-44-44",
+									"г. Москва", 500.0, "cashier_test", "cash");
 	
 	// Создаем заказы (используем локальный объект для демонстрации)
 	Order order1(waiter);
@@ -301,6 +304,35 @@ int main()
 	
 	// Завершаем заказ (обновляются счетчики продаж)
 	order1.CompleteOrder();
+
+	// Демонстрация работы новых производных классов: официант и кассир
+	std::cout << "\n--- Демонстрация работы производных классов Waiter и Cashier ---" << std::endl;
+	waiter->ServeOrder(std::make_shared<Order>(order1));	// официант обслуживает заказ (копия объекта)
+	waiter->AddTips(350.0);								// добавляем чаевые
+
+	// Кассир проводит оплату исходного заказа
+	std::shared_ptr<Order> order1PtrForCashier(&order1, [](Order*) {});
+	cashier->ProcessPayment(order1PtrForCashier);
+
+	// Расчет зарплаты с использованием перегруженных методов в новых производных классах
+	waiter->SetHoursWorked(160.0);
+	waiter->SetHourlyRate(400.0);
+	waiter->SetSalaryBalance(2000.0);
+	waiter->AddSales(15); // увеличим продажи для бонуса
+
+	cashier->SetHoursWorked(160.0);
+	cashier->SetHourlyRate(500.0);
+	cashier->SetSalaryBalance(1500.0);
+
+	std::cout << "\nЗарплата официанта (базовый расчет Employee): "
+			  << waiter->Employee::CalculateSalary() << " руб." << std::endl;
+	std::cout << "Зарплата официанта (перегруженный Waiter::CalculateSalary, с вызовом базового): "
+			  << waiter->CalculateSalary() << " руб." << std::endl;
+
+	std::cout << "\nЗарплата кассира (базовый расчет Employee): "
+			  << cashier->Employee::CalculateSalary() << " руб." << std::endl;
+	std::cout << "Зарплата кассира (перегруженный Cashier::CalculateSalary, без вызова базового): "
+			  << cashier->CalculateSalary() << " руб." << std::endl;
 	
 	// ============================================================
 	// 7. ДЕМОНСТРАЦИЯ РАБОТЫ С ИСКЛЮЧЕНИЯМИ (try, catch, throw)

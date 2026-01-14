@@ -6,7 +6,15 @@
 class Employee
 {
 private:
-	static int s_totalEmployees;		// Статическое поле: общее количество сотрудников
+	// Статическое поле: общее количество сотрудников
+	static int s_totalEmployees;
+
+	// Данные, которые не должны быть доступны наследникам напрямую
+	std::string m_login;			// Логин
+	std::string m_password;			// Пароль
+
+protected:
+	// Поля, к которым имеют доступ производные классы (демонстрация protected)
 	std::string m_fullName;			// ФИО
 	int m_age;						// Возраст
 	std::string m_contactNumber;	// Контактный номер
@@ -14,8 +22,6 @@ private:
 	std::string m_position;			// Должность
 	double m_hoursWorked;			// Отработанные часы
 	double m_hourlyRate;			// Почасовая ставка
-	std::string m_login;			// Логин
-	std::string m_password;			// Пароль
 	double m_salaryBalance;			// Баланс з/п (для штрафов, премий, списаний)
 	int m_salesCount;				// Количество продаж (для метода добавления продаж)
 
