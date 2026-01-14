@@ -8,6 +8,7 @@
 #include "order.hpp"
 #include "waiter.hpp"
 #include "cashier.hpp"
+#include "reportGenerator.hpp"
 #include <ctime>
 #include <memory>
 #include <vector>
@@ -262,15 +263,72 @@ int main()
 	// ============================================================
 	std::cout << "--- 6. Комплексная демонстрация взаимодействия классов ---" << std::endl;
 	
-	// Создаем менеджер
-	// Демонстрация вызова конструктора базового класса из конструктора дочернего класса
-	std::cout << "\n--- Демонстрация вызова конструктора базового класса для Manager ---" << std::endl;
-	std::cout << "Создание объекта Manager (дочерний класс) вызывает конструктор Employee (базовый класс)" << std::endl;
+	// ============================================================
+	// ДЕМОНСТРАЦИЯ ВЫЗОВА КОНСТРУКТОРА БАЗОВОГО КЛАССА В КОНСТРУКТОРЕ ПРОИЗВОДНОГО КЛАССА С ПАРАМЕТРАМИ
+	// ============================================================
+	std::cout << "\n--- Демонстрация вызова конструктора базового класса в конструкторе производного класса ---" << std::endl;
+	std::cout << "При создании объекта производного класса с параметрами," << std::endl;
+	std::cout << "конструктор производного класса ВСЕГДА вызывает конструктор базового класса." << std::endl;
+	std::cout << "Это происходит в списке инициализации через синтаксис: : Employee(...)" << std::endl;
+	std::cout << std::endl;
+	
+	// Пример 1: Manager
+	std::cout << "--- Пример 1: Manager ---" << std::endl;
+	std::cout << "Вызов: Manager(\"Главный Менеджер\", 40, \"+7-900-999-99-99\", \"г. Москва, ул. Главная, д. 1\", 1200.0, \"main_manager\", \"secure_pass\")" << std::endl;
+	std::cout << "В конструкторе Manager::Manager(...) происходит вызов:" << std::endl;
+	std::cout << "  : Employee(fullName, age, contactNumber, address, \"Менеджер\", hourlyRate, login, password)" << std::endl;
+	std::cout << "Это означает, что сначала инициализируется базовая часть объекта Employee," << std::endl;
+	std::cout << "а затем инициализируются поля, специфичные для Manager." << std::endl;
 	Manager manager("Главный Менеджер", 40, "+7-900-999-99-99",
 					"г. Москва, ул. Главная, д. 1", 1200.0,
 					"main_manager", "secure_pass");
-	std::cout << "Manager создан: " << manager.GetFullName() << ", должность: " << manager.GetPosition() << std::endl;
-	std::cout << "Должность 'Менеджер' установлена через конструктор базового класса Employee" << std::endl;
+	std::cout << "Результат: Manager создан: " << manager.GetFullName() 
+			  << ", должность: " << manager.GetPosition() << std::endl;
+	std::cout << "Должность 'Менеджер' была передана в конструктор Employee через список инициализации." << std::endl;
+	std::cout << std::endl;
+	
+	// Пример 2: Chef
+	std::cout << "--- Пример 2: Chef ---" << std::endl;
+	std::cout << "Вызов: Chef(\"Шеф Поваров\", 35, \"+7-900-222-22-22\", \"г. Москва\", 900.0, \"chef_demo\", \"pass\")" << std::endl;
+	std::cout << "В конструкторе Chef::Chef(...) происходит вызов:" << std::endl;
+	std::cout << "  : Employee(fullName, age, contactNumber, address, \"Шеф-повар\", hourlyRate, login, password)" << std::endl;
+	std::cout << "Затем инициализируются поля Chef: m_writeOffs() и m_shiftStartTime(0)" << std::endl;
+	Chef chefDemo("Шеф Поваров", 35, "+7-900-222-22-22",
+				  "г. Москва", 900.0, "chef_demo", "pass");
+	std::cout << "Результат: Chef создан: " << chefDemo.GetFullName() 
+			  << ", должность: " << chefDemo.GetPosition() << std::endl;
+	std::cout << "Должность 'Шеф-повар' была передана в конструктор Employee через список инициализации." << std::endl;
+	std::cout << std::endl;
+	
+	// Пример 3: Waiter
+	std::cout << "--- Пример 3: Waiter ---" << std::endl;
+	std::cout << "Вызов: Waiter(\"Официант Демо\", 25, \"+7-900-333-33-33\", \"г. Москва\", 400.0, \"waiter_demo\", \"pass\")" << std::endl;
+	std::cout << "В конструкторе Waiter::Waiter(...) происходит вызов:" << std::endl;
+	std::cout << "  : Employee(fullName, age, contactNumber, address, \"Официант\", hourlyRate, login, password)" << std::endl;
+	std::cout << "Затем инициализируются поля Waiter: m_tablesServed(0) и m_tipsBalance(0.0)" << std::endl;
+	Waiter waiterDemo("Официант Демо", 25, "+7-900-333-33-33",
+					  "г. Москва", 400.0, "waiter_demo", "pass");
+	std::cout << "Результат: Waiter создан: " << waiterDemo.GetFullName() 
+			  << ", должность: " << waiterDemo.GetPosition() << std::endl;
+	std::cout << "Должность 'Официант' была передана в конструктор Employee через список инициализации." << std::endl;
+	std::cout << std::endl;
+	
+	// Пример 4: Cashier
+	std::cout << "--- Пример 4: Cashier ---" << std::endl;
+	std::cout << "Вызов: Cashier(\"Кассир Демо\", 28, \"+7-900-444-44-44\", \"г. Москва\", 500.0, \"cashier_demo\", \"pass\")" << std::endl;
+	std::cout << "В конструкторе Cashier::Cashier(...) происходит вызов:" << std::endl;
+	std::cout << "  : Employee(fullName, age, contactNumber, address, \"Кассир\", hourlyRate, login, password)" << std::endl;
+	std::cout << "Затем инициализируется поле Cashier: m_cashRegisterTotal(0.0)" << std::endl;
+	Cashier cashierDemo("Кассир Демо", 28, "+7-900-444-44-44",
+						"г. Москва", 500.0, "cashier_demo", "pass");
+	std::cout << "Результат: Cashier создан: " << cashierDemo.GetFullName() 
+			  << ", должность: " << cashierDemo.GetPosition() << std::endl;
+	std::cout << "Должность 'Кассир' была передана в конструктор Employee через список инициализации." << std::endl;
+	std::cout << std::endl;
+	
+	std::cout << "ВАЖНО: Конструктор базового класса ВСЕГДА вызывается ПЕРЕД телом конструктора производного класса." << std::endl;
+	std::cout << "Это гарантирует, что базовая часть объекта полностью инициализирована до инициализации производной части." << std::endl;
+	std::cout << std::endl;
 	
 	// Демонстрация конструктора копирования дочернего класса
 	Manager managerCopy(manager);  // Вызывает конструктор копирования Manager, который вызывает конструктор копирования Employee
@@ -283,11 +341,11 @@ int main()
 	std::shared_ptr<MenuItem> pasta(manager.CreateMenuItem("Лазанья", 180.0, 480.0, true));
 	
 	// Создаем сотрудника-официанта и кассира как производные классы от Employee
+	// (демонстрация вызова конструктора базового класса уже показана выше)
 	std::shared_ptr<Waiter> waiter = std::make_shared<Waiter>("Официант Тестовый", 22, "+7-900-000-00-00",
 									"г. Москва", 400.0, "waiter_test", "test");
 	std::shared_ptr<Cashier> cashier = std::make_shared<Cashier>("Кассир Тестовый", 30, "+7-900-444-44-44",
 									"г. Москва", 500.0, "cashier_test", "cash");
-	std::cout << "Создан Waiter и Cashier: их конструкторы вызывают конструктор базового класса Employee с параметрами (ФИО, возраст, контакты, ставка, логин)." << std::endl;
 	
 	// Создаем заказы (используем локальный объект для демонстрации)
 	Order order1(waiter);
@@ -373,6 +431,14 @@ int main()
 		std::cout << "Поймано исключение std::invalid_argument: " << ex.what() << std::endl;
 	}
 	
+	// Создаем шеф-повара и работаем со складом
+	// Демонстрация вызова конструктора базового класса из конструктора дочернего класса
+	std::cout << "\n--- Демонстрация вызова конструктора базового класса из дочернего ---" << std::endl;
+	std::cout << "Создание объекта Chef (дочерний класс) вызывает конструктор Employee (базовый класс)" << std::endl;
+	std::shared_ptr<Chef> chefPtr = std::make_shared<Chef>("Шеф Тестовый", 38, "+7-900-777-77-77",
+							 "г. Москва", 900.0,
+							 "chef_test", "chef_pass");
+	
 	// Пример 2: попытка списать больше продукта, чем есть на складе
 	try
 	{
@@ -392,14 +458,6 @@ int main()
 	{
 		std::cout << "Поймано другое стандартное исключение: " << ex.what() << std::endl;
 	}
-	
-	// Создаем шеф-повара и работаем со складом
-	// Демонстрация вызова конструктора базового класса из конструктора дочернего класса
-	std::cout << "\n--- Демонстрация вызова конструктора базового класса из дочернего ---" << std::endl;
-	std::cout << "Создание объекта Chef (дочерний класс) вызывает конструктор Employee (базовый класс)" << std::endl;
-	std::shared_ptr<Chef> chefPtr = std::make_shared<Chef>("Шеф Тестовый", 38, "+7-900-777-77-77",
-							 "г. Москва", 900.0,
-							 "chef_test", "chef_pass");
 	std::cout << "Chef создан: " << chefPtr->GetFullName() << ", должность: " << chefPtr->GetPosition() << std::endl;
 	std::cout << "Должность установлена через конструктор базового класса Employee" << std::endl;
 	
@@ -540,6 +598,135 @@ int main()
 	}
 	std::cout << "Общая сумма зарплат: " << totalSalary << " руб." << std::endl;
 	std::cout << "Каждый сотрудник получает зарплату по своей формуле благодаря виртуальным функциям!" << std::endl;
+	
+	// ============================================================
+	// 9. ДЕМОНСТРАЦИЯ АБСТРАКТНОГО КЛАССА IReportGenerator
+	// ============================================================
+	std::cout << "\n--- 9. Демонстрация абстрактного класса IReportGenerator ---" << std::endl;
+	std::cout << "Абстрактный класс IReportGenerator определяет интерфейс для генерации отчетов." << std::endl;
+	std::cout << "Классы Manager и Chef реализуют этот интерфейс." << std::endl;
+	std::cout << std::endl;
+	
+	// Создаем указатели на абстрактный класс
+	IReportGenerator* reportGen1 = &manager;   // Manager реализует IReportGenerator
+	IReportGenerator* reportGen2 = chefPtr.get();  // Chef реализует IReportGenerator
+	
+	std::cout << "--- Использование абстрактного класса через указатели ---" << std::endl;
+	std::cout << "Тип отчета 1: " << reportGen1->GetReportType() << std::endl;
+	reportGen1->PrintReport();  // Вызывает реализацию из Manager
+	
+	std::cout << std::endl;
+	std::cout << "Тип отчета 2: " << reportGen2->GetReportType() << std::endl;
+	reportGen2->PrintReport();  // Вызывает реализацию из Chef
+	
+	// Массив указателей на абстрактный класс
+	std::vector<IReportGenerator*> reportGenerators = {reportGen1, reportGen2};
+	std::cout << "\n--- Обработка массива генераторов отчетов ---" << std::endl;
+	for (size_t i = 0; i < reportGenerators.size(); ++i)
+	{
+		std::cout << "Генератор #" << (i + 1) << ": " << reportGenerators[i]->GetReportType() << std::endl;
+		std::cout << reportGenerators[i]->GenerateReport() << std::endl;
+		std::cout << std::endl;
+	}
+	std::cout << "Абстрактный класс позволяет работать с разными типами отчетов единообразно!" << std::endl;
+	
+	// ============================================================
+	// 10. ДЕМОНСТРАЦИЯ ОПЕРАТОРА ПРИСВАИВАНИЯ ДЛЯ ПРОИЗВОДНОГО КЛАССА
+	// ============================================================
+	std::cout << "\n--- 10. Демонстрация оператора присваивания для производного класса ---" << std::endl;
+	std::cout << "Оператор присваивания Manager::operator=(const Employee&) позволяет" << std::endl;
+	std::cout << "присваивать объект базового класса Employee объекту производного класса Manager." << std::endl;
+	std::cout << std::endl;
+	
+	// Создаем объект базового класса
+	Employee baseEmployee("Базовый Сотрудник", 30, "+7-900-111-11-11",
+						 "г. Москва", "Сотрудник", 600.0, "base", "base123");
+	
+	std::cout << "До присваивания:" << std::endl;
+	std::cout << "  baseEmployee: " << baseEmployee.GetFullName() 
+			  << ", возраст: " << baseEmployee.GetAge()
+			  << ", ставка: " << baseEmployee.GetHourlyRate() << " руб./час" << std::endl;
+	std::cout << "  manager: " << manager.GetFullName() 
+			  << ", возраст: " << manager.GetAge()
+			  << ", ставка: " << manager.GetHourlyRate() << " руб./час" << std::endl;
+	std::cout << "  Должность manager: " << manager.GetPosition() << std::endl;
+	
+	// Присваиваем объект базового класса объекту производного класса
+	std::cout << "\nВыполняем: manager = baseEmployee;" << std::endl;
+	std::cout << "Это вызывает перегруженный оператор Manager::operator=(const Employee&)" << std::endl;
+	std::cout << "Который копирует доступные поля из baseEmployee в manager." << std::endl;
+	manager = baseEmployee;  // Использует перегруженный оператор присваивания
+	
+	std::cout << "\nПосле присваивания manager = baseEmployee:" << std::endl;
+	std::cout << "  manager: " << manager.GetFullName() 
+			  << ", возраст: " << manager.GetAge()
+			  << ", ставка: " << manager.GetHourlyRate() << " руб./час" << std::endl;
+	std::cout << "  Должность manager осталась: " << manager.GetPosition() << std::endl;
+	std::cout << "  (специфичные для Manager данные сохраняются, копируются только общие поля из Employee)" << std::endl;
+	std::cout << std::endl;
+	std::cout << "ВАЖНО: Оператор присваивания копирует только доступные через публичные методы поля." << std::endl;
+	std::cout << "Приватные поля базового класса (например, логин и пароль) не копируются." << std::endl;
+	
+	// ============================================================
+	// 11. ДЕМОНСТРАЦИЯ ЗАПРЕТА КОНСТРУКТОРА КОПИРОВАНИЯ
+	// ============================================================
+	std::cout << "\n--- 11. Демонстрация запрета конструктора копирования ---" << std::endl;
+	std::cout << "Класс MenuItem имеет запрещенный конструктор копирования (= delete)." << std::endl;
+	std::cout << "Это предотвращает случайное копирование объектов MenuItem." << std::endl;
+	std::cout << std::endl;
+	
+	MenuItem itemForCopyDemo("Борщ", 50.0, 150.0, true);
+	std::cout << "Создан MenuItem: " << itemForCopyDemo.GetName() << std::endl;
+	
+	// Попытка использовать конструктор копирования вызовет ошибку компиляции
+	// Если расскоментировать следующую строку, будет ошибка:
+	// MenuItem item2(itemForCopyDemo);  // ОШИБКА: использование удаленной функции 'MenuItem::MenuItem(const MenuItem&)'
+	
+	std::cout << "Попытка скопировать MenuItem через конструктор копирования приведет к ошибке компиляции." << std::endl;
+	std::cout << "Вместо этого используйте методы клонирования Order::CloneDeep() или Order::CloneShallow()." << std::endl;
+	
+	// ============================================================
+	// 12. ДЕМОНСТРАЦИЯ ВИРТУАЛЬНОГО ДЕСТРУКТОРА
+	// ============================================================
+	std::cout << "\n--- 12. Демонстрация виртуального деструктора ---" << std::endl;
+	std::cout << "Деструктор Employee теперь виртуальный (virtual ~Employee())." << std::endl;
+	std::cout << std::endl;
+	
+	{
+		std::cout << "Создаем динамические объекты производных классов через указатель базового класса:" << std::endl;
+		Employee* emp1 = new Waiter("Тестовый Официант", 25, "+7-900-000-00-00",
+									"г. Москва", 400.0, "waiter_virt", "pass");
+		Employee* emp2 = new Chef("Тестовый Шеф", 35, "+7-900-111-11-11",
+								  "г. Москва", 900.0, "chef_virt", "pass");
+		Employee* emp3 = new Manager("Тестовый Менеджер", 40, "+7-900-222-22-22",
+									 "г. Москва", 1200.0, "manager_virt", "pass");
+		
+		std::cout << "  Создан: " << emp1->GetFullName() << " (" << emp1->GetPosition() << ")" << std::endl;
+		std::cout << "  Создан: " << emp2->GetFullName() << " (" << emp2->GetPosition() << ")" << std::endl;
+		std::cout << "  Создан: " << emp3->GetFullName() << " (" << emp3->GetPosition() << ")" << std::endl;
+		
+		std::cout << "\nУдаляем объекты через указатель базового класса Employee*:" << std::endl;
+		std::cout << "Благодаря виртуальному деструктору, вызывается правильный деструктор для каждого типа!" << std::endl;
+		
+		delete emp1;  // Вызовет ~Waiter(), затем ~Employee()
+		delete emp2;  // Вызовет ~Chef(), затем ~Employee()
+		delete emp3;  // Вызовет ~Manager(), затем ~Employee()
+		
+		std::cout << "\nВсе объекты корректно удалены!" << std::endl;
+	}
+	
+	std::cout << "\n--- Объяснение виртуального деструктора ---" << std::endl;
+	std::cout << "БЕЗ виртуального деструктора:" << std::endl;
+	std::cout << "  - При удалении через указатель Employee* вызывался бы только ~Employee()" << std::endl;
+	std::cout << "  - Деструкторы производных классов (~Waiter, ~Chef, ~Manager) НЕ вызывались бы" << std::endl;
+	std::cout << "  - Это приводит к утечкам памяти и некорректному освобождению ресурсов" << std::endl;
+	std::cout << std::endl;
+	std::cout << "С виртуальным деструктором:" << std::endl;
+	std::cout << "  - При удалении через указатель Employee* сначала вызывается деструктор производного класса" << std::endl;
+	std::cout << "  - Затем вызывается деструктор базового класса ~Employee()" << std::endl;
+	std::cout << "  - Это гарантирует правильное освобождение всех ресурсов" << std::endl;
+	std::cout << std::endl;
+	std::cout << "ВАЖНО: Если класс имеет виртуальные функции, деструктор ДОЛЖЕН быть виртуальным!" << std::endl;
 	
 	// Память автоматически освобождается смарт-указателями
 	

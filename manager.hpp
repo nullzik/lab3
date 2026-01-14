@@ -5,12 +5,13 @@
 #include "menuItem.hpp"
 #include "inventory.hpp"
 #include "order.hpp"
+#include "reportGenerator.hpp"
 #include <vector>
 #include <memory>
 
-// Класс управляющего, наследуется от Employee
+// Класс управляющего, наследуется от Employee и реализует IReportGenerator
 // Предоставляет расширенные права доступа для управления рестораном
-class Manager : public Employee
+class Manager : public Employee, public IReportGenerator
 {
 public:
 	using EmployeesType = std::vector<std::shared_ptr<Employee>>;
@@ -53,6 +54,13 @@ public:
 	
 	// Переопределение виртуальной функции из базового класса
 	double CalculateSalary() const override;	// Переопределение виртуальной функции Employee::CalculateSalary()
+	
+	// Реализация методов абстрактного класса IReportGenerator
+	std::string GenerateReport() const override;	// Генерация отчета менеджера
+	std::string GetReportType() const override;		// Тип отчета менеджера
+	
+	// Перегрузка оператора присваивания для присваивания объекта базового класса Employee
+	Manager& operator=(const Employee& other);
 };
 
 #endif // MANAGER_HPP

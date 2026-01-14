@@ -32,7 +32,7 @@ public:
 			 const std::string& address, const std::string& position,
 			 double hourlyRate, const std::string& login, const std::string& password);
 	Employee(const Employee& other);		// Конструктор копирования
-	~Employee();
+	virtual ~Employee();					// Виртуальный деструктор (важно для полиморфизма)
 
 	// Публичные методы
 	virtual double CalculateSalary() const;			// Виртуальная функция: расчет заработной платы

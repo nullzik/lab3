@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cstring>
 #include <stdexcept>
+#include <sstream>
 
 Chef::Chef()
 	: Employee()
@@ -213,5 +214,25 @@ double Chef::CalculateSalary() const
 			  << ", бонус шеф-повара = " << chefBonus << std::endl;
 	
 	return baseSalary + chefBonus;
+}
+
+std::string Chef::GenerateReport() const
+{
+	// Реализация абстрактного метода: генерирует отчет шеф-повара
+	std::ostringstream oss;
+	oss << "Отчет шеф-повара: " << GetFullName() << "\n";
+	oss << "Должность: " << GetPosition() << "\n";
+	oss << "Отработано часов: " << GetHoursWorked() << "\n";
+	oss << "Почасовая ставка: " << GetHourlyRate() << " руб./час\n";
+	oss << "Зарплата: " << CalculateSalary() << " руб.\n";
+	oss << "Количество списаний продуктов: " << m_writeOffs.size() << "\n";
+	oss << "Количество продаж: " << GetSalesCount();
+	return oss.str();
+}
+
+std::string Chef::GetReportType() const
+{
+	// Реализация абстрактного метода: возвращает тип отчета
+	return "Отчет шеф-повара";
 }
 

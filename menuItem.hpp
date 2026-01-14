@@ -21,7 +21,7 @@ public:
 	// Конструкторы и деструктор
 	MenuItem();
 	MenuItem(const std::string& name, double costPrice, double sellingPrice, bool isAvailable = true);
-	MenuItem(const MenuItem& other);		// Конструктор копирования
+	MenuItem(const MenuItem& other) = delete;		// Конструктор копирования запрещен (используйте CloneDeep/CloneShallow)
 	~MenuItem() = default;
 
 	// Публичные методы

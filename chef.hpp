@@ -5,13 +5,14 @@
 #include "product.hpp"
 #include "menuItem.hpp"
 #include "inventory.hpp"
+#include "reportGenerator.hpp"
 #include <vector>
 #include <ctime>
 #include <memory>
 
-// Класс шеф-повара, наследуется от Employee
+// Класс шеф-повара, наследуется от Employee и реализует IReportGenerator
 // Предоставляет доступ к управлению продуктами, технологическими картами и складом
-class Chef : public Employee
+class Chef : public Employee, public IReportGenerator
 {
 public:
 	using WriteOffsType = std::vector<std::pair<std::shared_ptr<Product>, double>>;	// Вектор списаний (продукт и количество)
@@ -48,6 +49,10 @@ public:
 	
 	// Переопределение виртуальной функции из базового класса
 	double CalculateSalary() const override;	// Переопределение виртуальной функции Employee::CalculateSalary()
+	
+	// Реализация методов абстрактного класса IReportGenerator
+	std::string GenerateReport() const override;	// Генерация отчета шеф-повара
+	std::string GetReportType() const override;		// Тип отчета шеф-повара
 };
 
 #endif // CHEF_HPP

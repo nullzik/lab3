@@ -1,6 +1,7 @@
 #include "manager.hpp"
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 Manager::Manager()
 	: Employee()
@@ -217,5 +218,44 @@ double Manager::CalculateSalary() const
 			  << ", баланс = " << m_salaryBalance << std::endl;
 	
 	return total;
+}
+
+std::string Manager::GenerateReport() const
+{
+	// Реализация абстрактного метода: генерирует отчет менеджера
+	std::ostringstream oss;
+	oss << "Отчет менеджера: " << GetFullName() << "\n";
+	oss << "Должность: " << GetPosition() << "\n";
+	oss << "Отработано часов: " << GetHoursWorked() << "\n";
+	oss << "Почасовая ставка: " << GetHourlyRate() << " руб./час\n";
+	oss << "Зарплата: " << CalculateSalary() << " руб.\n";
+	oss << "Количество продаж: " << GetSalesCount();
+	return oss.str();
+}
+
+std::string Manager::GetReportType() const
+{
+	// Реализация абстрактного метода: возвращает тип отчета
+	return "Отчет менеджера";
+}
+
+Manager& Manager::operator=(const Employee& other)
+{
+	// Перегрузка оператора присваивания: присваивание объекта базового класса Employee
+	// Копируем только доступные поля из базового класса
+	if (this != &other)
+	{
+		// Используем публичные методы для копирования данных
+		SetFullName(other.GetFullName());
+		SetAge(other.GetAge());
+		SetContactNumber(other.GetContactNumber());
+		SetAddress(other.GetAddress());
+		SetPosition(other.GetPosition());
+		SetHoursWorked(other.GetHoursWorked());
+		SetHourlyRate(other.GetHourlyRate());
+		SetSalaryBalance(other.GetSalaryBalance());
+		// Приватные поля (логин, пароль) не копируются
+	}
+	return *this;
 }
 
